@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página</title>
+</head>
+<body>
+   <form action="" method="post">
+    Email: <input type="text" name="emailForm" id=""><br>
+    Senha: <input type="password" name="senhaForm" id=""><br>
+    <input type="submit" value="Adentre"> 
+</form>
+<h1>Não possui uma conta? Registre-se a baixo.</h1>
+<!-- Botão de register -->
+<form action="{{ url_for('registrar') }}" method="get">
+    <button type="submit" class="register-button">Registrar</button>
+</form>
+</body>
+</html>
