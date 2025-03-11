@@ -22,48 +22,27 @@
     </table>
 </div>
 
-### 1. Objetos
-O **obj_father_player** teve alterações em seu Create, recebendo as variáveis: move_r (movimento restrito), slow (lentidão), fast (velocidade) e high_jumpstunned (pulo alto). Além disso, variáveis como knockback, invincibility e transformed passaram a ter mais participação. Em seu Step, foi alterada a restrição de movimento do jogador através de uma adição de um "E". No Draw, foram adicionadas condições de decisão para que, caso as variáveis desse tipo estejam com valor TRUE, os ícones respectivos sejam desenhados à direita, caso haja mais de um.
-
-O **scr_skills_attack** teve alterações nas funções scr_lucas_player_attack() e scr_naja_player_attack(), com a substituição da variável knockback por move_r em suas interações com o jogador e o inimigo, além da adição das respectivas variáveis de condições.
-
-
-O **scr_skills_defense** teve uma mudança em todas as funções de defesa tendo suas variáveis de knockback substituidas por move_r e adicionadas mais variáveis de condições em sua composição, exceto na scr_bruna_player_defense().
-
+### 1. Geral
+Foi criado o arquivo **Db.py** sendo um script que reverencia ao SQLAlchemy
+Foi criado o arquivo **models.py** sendo um script que guarda as classes do programa que serão usadas para a manipulação do banco de dados
+Foi criado o **main.py** responsável pelas rotas, conexão com o banco de dados, etc
+Foi criado o **homepage.html** sendo a pagina principal do programa quando o usuário acessar a aplicação variando se o usuário estiver ou não logado
+Foi criado o **atualizar_usu.html** sendo responsável por atualizar informações do usuário no banco como troca de email, senha etc.
+Foi criado o **login.html responsável** pelo login do usuário e acesso ao site
+Foi criado o **register.html** responsável por registrar o usuário no banco de dados e consequentemente enviar o login para o banco.
+No **main.py** foram criadas as rotas de login,registrar,homepage,logout e atualizar_usu respectivamente responsaveis por: login, registro, pagina inicial, logout e atualização das informações do usuario
+Foram criados botões no html responsaveis por direcionar o usuario para um novo html
 ---
 
 ### 2. Programação
 
-**Objects > Players > obj_father_players > Create**
+**Db.py**
 
-Nessa parte, foram adicionadas novas variáveis chamadas **move_r**, **slow**, **fast** e **high_jump**, responsáveis por ativar suas respectivas condições: restrição de movimento, lentidão, velocidade e pulo aumentado.
-Vale ressaltar que a variável move_r, apesar de representar uma condição, age de modo diferente das demais, sendo usada para restringir o movimento dos personagens, de modo que outras condições sejam aplicadas, funcionando como uma condição auxiliar, assumindo o antigo papel da variável knockback.
+Foi importado a biblioteca fask_sqlalchemy para a conexão do banco de dados, a variável db recebe o modelo do SQLAlchemy a fazendo ter todas as propriedades para manipulação de um banco:
+```Python
+from flask_sqlalchemy import SQLAlchemy 
+db = SQLAlchemy()
 
-Dessa maneira, permite-se que cada condição tenha seu próprio espaço, sendo devidamente representada por 1 sprite.
-Segue a parte em que foram adicionadas as variáveis, juntamente com as que já existiam:
-
-```GML
-/* Condições do Jogador
-	Por enquanto temos algumas condições do jogador:
-	
-	1. Stunned: o jogador não consegue se mexer
-	2. Knockback: fazendo o jogador não conseguir passar o que está no knockback
-	3. Invicibility: ficando imune a dano por um certo período de tempo
-	4. Transformed: caso o jogador mude de forma temporáriamente.
-	5. Move_r: restringir o movimento do jogador, uma condição auxiliar para fazer outras funcionarem
-	6. Slow: o jogador fica com sua movimentação lenta
-	7. Fast: o jogador fica com sua movimentação mais rapida
-	8. High_Jump: o jogador pula mais alto
-*/
-
-stunned = false;
-knockback = false;
-invincibility = false;
-transformed = false;
-move_r = false;
-slow = false;
-fast = false;
-high_jump = false;
 
 ```
 
