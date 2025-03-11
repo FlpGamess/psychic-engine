@@ -1,0 +1,250 @@
+## Procedimento de Compilação
+<div align="center">
+    <table border="1">
+        <thead>
+            <tr>
+                <th><strong>CÓDIGO</strong></th>
+                <th><strong>TÍTULO</strong></th>
+                <th><strong>STATUS</strong></th>
+                <th><strong>DATA DA REVISÃO</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>PC-0.1-01</td>
+                <td>Sistema de Login completo</td>
+                <td>Compilado</td>
+                <td>09/03/2025</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+### 1. Geral
+Foi criado o arquivo **Db.py** sendo um script que reverencia ao SQLAlchemy
+Foi criado o arquivo **models.py** sendo um script que guarda as classes do programa que serão usadas para a manipulação do banco de dados
+Foi criado o **main.py** responsável pelas rotas, conexão com o banco de dados, etc
+Foi criado o **homepage.html** sendo a pagina principal do programa quando o usuário acessar a aplicação variando se o usuário estiver ou não logado
+Foi criado o **atualizar_usu.html** sendo responsável por atualizar informações do usuário no banco como troca de email, senha etc.
+Foi criado o **login.html responsável** pelo login do usuário e acesso ao site
+Foi criado o **register.html** responsável por registrar o usuário no banco de dados e consequentemente enviar o login para o banco.
+No **main.py** foram criadas as rotas de login,registrar,homepage,logout e atualizar_usu respectivamente responsaveis por: login, registro, pagina inicial, logout e atualização das informações do usuario
+Foram criados botões no html responsaveis por direcionar o usuario para um novo html
+
+
+---
+
+### 2. Programação
+
+Criar o `obj_kick` no local: **Objects > Players > Skills > HeadBall**
+
+**Objects > Players > Skills > HeadBall > obj_kick > Create**
+```GML
+obj = ""
+_scale_ = 4
+_angle_add = 2
+_angle = 0
+culldown = false
+image_xscale *= _scale
+image_yscale *= _scale
+alarm[0] = 10
+```
+
+**Objects > Players > Skills > HeadBall > obj_kick > Step**
+```GML
+x = obj.x
+y = obj.y
+_angle += _angle_add
+image_angle = _angle
+```
+
+**Objects > Players > Skills > HeadBall > obj_kick > Alarm[0]**
+```GML
+instance_destroy();
+```
+
+**Objects > Gameplay > Headball > obj_ball > Create**
+```GML
+// Iniciando com algumas variáveis da bola
+hor_speed = 0; // Velocidade da bola horizontal
+ver_speed = 0; // Velocidade da bola vertical
+
+rot_angle = 0;
+hor_dire = 0; // Direção que vai aplicar a velocidade da bola, 0=direita 1=esquerda
+
+grav = 0.1; // Força da gravidade
+bouncedecay = 0.8; // Velocidade que reduz da bola ao tocar no chão ou parede
+hordecay = 0.01; // Velocidade que a bola perde ao andar horizontalmente sozinha
+
+// Aumentando o tamanho do objeto
+image_xscale = 3;
+image_yscale = 3;
+
+hor_kb_force = 5; // Se colidir com o player, a força a ser aplicada horizontalmente
+ver_kb_force = 1; // Se colidir com o player, a força a ser aplicada verticalmente
+
+hor_for_ball = 15; // Ao bater na chuteira do player, a força horizontal
+ver_for_ball = 15; // Ao bater na chuteira do player, a força vertical
+```
+
+**Objects > Gameplay > Headball > obj_ball > Step**
+```GML
+#region // Velocidade vertical
+if (!place_meeting(x, y + ver_speed + grav, obj_father_colision)) {
+    ver_speed += grav;
+} else {
+    if (ver_speed > 1) {
+        ver_speed -= bouncedecay;
+        ver_speed *= -1;
+    } else {
+        ver_speed = 0;
+    }
+}
+#endregion
+
+#region // Velocidade horizontal
+if (hor_dire == 0) {
+    if (hor_speed > 0) {
+        hor_speed -= hordecay;
+    } else {
+        hor_speed = 0;
+    }
+    
+    if (place_meeting(x + hor_speed, y, obj_father_colision)) {
+        hor_dire = 1;
+        hor_speed -= bouncedecay;
+    }
+} else {
+    if (hor_speed > 0) {
+        hor_speed -= hordecay;
+    } else {
+        hor_speed = 0;
+    }
+    
+    if (place_meeting(x - hor_speed, y, obj_father_colision)) {
+        hor_dire = 0;
+        hor_speed -= bouncedecay;
+    }
+}
+#endregion
+
+#region // Aplicar as velocidades na bola
+if (hor_dire == 0) {
+    x += hor_speed;
+} else {
+    x -= hor_speed;
+}
+y += ver_speed;
+#endregion
+
+#region // Colisão com a bola e o jogador
+var bola = id;
+with (obj_father_players) {
+    if (place_meeting(x, y, bola) && culldown_hit <= 0) {
+        if (hor_speed != 0) {
+            if (bola.hor_speed < 5) {
+                bola.hor_speed += bola.hor_kb_force;
+            }
+            if (hor_speed > 0) {
+                bola.hor_dire = 0;
+            } else {
+                bola.hor_dire = 1;
+            }
+        } else {
+            bola.hor_dire = (bola.hor_dire == 0) ? 1 : 0;
+        }
+
+        if (bola.ver_speed != 0) {
+            bola.ver_speed += bola.ver_kb_force;
+        } else if (hor_speed != 0) {
+            bola.ver_speed += 6;
+        }
+
+        culldown_hit = culldown_time;
+    }
+
+    if (culldown_hit > 1) {
+        culldown_hit--;
+    } else if (culldown_hit == 1 && !place_meeting(x, y, bola)) {
+        culldown_hit--;
+    }
+}
+#endregion
+
+#region // Colisão com a bola e o chute
+var chute = instance_nearest(x, y, obj_chute);
+
+if (place_meeting(x, y, chute)) {
+    if (!chute.culldown) {
+        if (hor_speed <= hor_for_ball) {
+            hor_speed += hor_for_ball;
+        }
+        ver_speed = ver_for_ball;
+        chute.culldown = true;
+    }
+}
+#endregion
+```
+
+**Scripts > scr_player**
+```GML
+function scr_damage_base(_my_enemy) {
+    if (!_my_enemy.invincibility) {
+        _my_enemy.life--;
+        _my_enemy.invincibility = true;
+        _my_enemy.alarm[1] = 60 * 2;
+    }
+}
+
+function scr_player_chute() {
+    var ch = instance_create_layer(x, y, "Others", obj_chute);
+    ch.obj = id;
+    ch.image_xscale = image_xscale;
+    ch._angle_add = 1 * image_xscale;
+}
+```
+
+**Objects > Players obj_player1 > Step**
+```GML
+if (stunned == false && state != "Dead") {
+    walk_left = keyboard_check(ord("A"));
+    walk_right = keyboard_check(ord("D"));
+    jump = keyboard_check_pressed(ord("W"));
+    down = keyboard_check_pressed(ord("S"));
+    skill = keyboard_check_pressed(ord("Q"));
+}
+
+#region // Caso ele aperte a skill
+if (skill && room != rm_headball) {
+    switch (switch_power) {
+        case 1:
+            instance_create_layer(x, y - 50, "Skills", obj_attack1);
+            switch_power = 0;
+        break;
+
+        case 2:
+            var _random = choose(1, 2, 3, 4, 5);
+            switch (_random) {
+                case 1: life--; break;
+                case 2: if (life <= 2) life++; break;
+                case 3: break;
+                case 4: switch_power = 1; break;
+                case 5: switch_power = 3; break;
+            }
+        break;
+
+        case 3:
+            instance_create_layer(x, y - 50, "Skills", obj_defense1);
+            switch_power = 0;
+        break;
+    }
+}
+#endregion
+
+event_inherited();
+```
+
+Deverá fazer a mesma coisa para o jogador número dois.
+
+### 3. Autores
+Lucas Vitor Florêncio
