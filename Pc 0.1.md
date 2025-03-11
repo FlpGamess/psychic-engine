@@ -46,109 +46,128 @@ db = SQLAlchemy()
 
 ```
 
-**Objects > Players > obj_father_players > Step**
+**models.py**
 
-Foi adicionado no if da movimentação do jogador um && com a variável move_r == false, fazendo com que a variável knockback fique apenas para a função de sua condição, e esta nova (move_r) cuide dos demais casos referentes a outras condições no quesito de restringir a movimentação.
+Foi importada a variável db do arquivo Db.py, após isso é criada a classe Usuario recebendo o modelo de classe para banco de dados, ela reverencia a tabelo usuários tendo seus componentes o id,nome,email,senha e foto_perfil_url.
 
-```GML
-//Fazendo a movimentação do jogador
-if(knockback == false && move_r == false){
-	hor_speed = (walk_right - walk_left) * max_speed;
-}
+```Python
+from db import db
+from flask_login import UserMixin
+
+class Usuario(db.Model, UserMixin):
+    __tablename__ = 'usuarios'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    senha = db.Column(db.String(255), nullable=False)
+    foto_perfil_url = db.Column(db.String(255))
+
 ```
 
-**Objects > Players > obj_father_players > Draw**
+**main.py**
 
 Foi adicionada uma nova region para a lógica das condições. A variavel total_conditions conta o numero de condições que estão ativas no jogador, o vetor v_conditions armazena todas as condições que o jogador pode ter, após isto é feito um loop para contar quantas condições estão ativas no jogador e aumentar em 1 o valor de total_conditions. A variavel total_width calcula a largura total ocupada pelos icones e a x_start calcula a posição inicial das condições para sua centralização,as variáveis x_condition e y_condition são iniciadas com o valor de x_start e y inicial do player para calcular as posições iniciais
 
-Após isso, foram criados 7 ifs que verificam se a variável correspondente a uma condição do jogador é verdadeira. Caso seja, chama-se a função draw_sprite, que desenha:
 
-O sprite da condição,
+```Python
+from flask import Flask, render_template, request,redirect,url_for
+from flask_login import LoginManager,login_user,login_required,logout_user, current_user
+from models import Usuario
+from db import db
 
-O frame do sprite,
+app= Flask(__name__)
+app.secret_key = 'receba'
+lm = LoginManager(app)
+lm.login_view = 'login'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:n0r1@localhost:5432/eventos'
+db.init_app(app)
 
-A posição em x,
+# Função para carregar o usuário
+@lm.user_loader
+def user_loader(id):
+    usuario = db.session.query(Usuario).filter_by(id=id).first()
+    return usuario
 
-A posição em y - 100 (esse -100 faz com que o ícone fique acima da cabeça do player).
 
-Após isso, adiciona-se +32 em x_condition, para que, caso o player sofra mais de uma condição, o próximo ícone seja desenhado a 32 pixels de distância do anterior.
+# Rota principal
+@app.route("/", methods=['GET','POST'])
+#@login_required
+def homepage():
+    #print(current_user.email)
+    return render_template("homepage.html")
 
-```GML
-#region // Desenhando as Condições
-if(global.gamemode = "1x1"){
-	if(obj_gameplay.game_state == "Playing"){
-		draw_condition = true;
-	} else {
-		draw_condition = false;
-	}
-} else if(global.gamemode = "Headball"){
-	if(obj_gameplay_hball.game_state == "Playing"){
-		draw_condition = true;
-	} else {
-		draw_condition = false;
-	}
-}
 
-// Limitando o motivo de desenhar as condições
-if(draw_condition){
-	// Conta o total de condições 
-	var total_conditions = 0;
+# Rota de login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        email = request.form['emailForm']
+        senha = request.form['senhaForm']
+        user = db.session.query(Usuario).filter_by(email=email, senha=senha).first()
 
-	// Vetor com todas as condições
-	var v_conditions = [player_obj.knockback, player_obj.stunned, player_obj.slow, player_obj.invincibility, player_obj.fast, player_obj.high_jump, player_obj.transformed];
+        if not user:
+            return 'Email ou Senha incorretos'
+        login_user(user)
+        return redirect(url_for('homepage'))  # Redireciona para a homepage
 
-	// Loop for para contar o total de condições ativas no jogador
-	for (var i = 0; i < array_length(v_conditions); i++) {
-		if(v_conditions[i]){
-			total_conditions +=1;
-		}
-	}
-	
-	// Largura ocupada pelos sprites
-	var total_width = total_conditions * 32;
-	// Calcula o inicio ajustando a posição para centralizar
-	var start_x = x - (total_width / 2) + 16;
+# Rota de registro
+@app.route("/registrar", methods=['GET', 'POST'])
+def registrar():
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        nome = request.form['nomeForm']
+        email = request.form['emailForm']
+        senha = request.form['senhaForm']
 
-	var x_condition = start_x; // Posição X inicial
-	var y_condition = y; // Posição Y inicial
+        novo_usuario = Usuario(nome=nome, email=email, senha=senha)
+        db.session.add(novo_usuario)
+        db.session.commit()
 
-	// Desenhando o icone de stunado
-	if(player_obj.knockback == true){
-	    draw_sprite(spr_random_portrait, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
+        login_user(novo_usuario)
 
-	}
-	if(player_obj.stunned == true){
-		draw_sprite(spr_random_portrait, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
 
-	if(player_obj.slow == true){
-		draw_sprite(spr_condition_slow, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
+        return redirect(url_for('homepage'))  # Redireciona para a homepage
 
-	if(player_obj.invincibility == true){
-		draw_sprite(spr_condition_invincibility, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
+@app.route("/atualizar_usu", methods=['GET', 'POST'])
+@login_required
+def atualizar():
+    if request.method == 'GET':
+        return render_template('atualizar_usu.html')
 
-	if(player_obj.fast == true){
-		draw_sprite(spr_condition_fast, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
+    elif request.method == 'POST':
+        # Verifica qual campo o usuário quer atualizar
+        campo = request.form.get('campo')
+        novo_valor = request.form.get('novo_valor')
 
-	if(player_obj.high_jump == true){
-		draw_sprite(spr_condition_high_jump, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
+        if campo == 'nome':
+            current_user.nome = novo_valor
+        elif campo == 'email':
+            # Atualiza o email
+            current_user.email = novo_valor
+        elif campo == 'senha':
+            # Atualiza a senha (use hash para segurança)
+            current_user.senha = novo_valor
+        else:
+            return 'Campo inválido', 400
 
-	if(player_obj.transformed == true){
-		draw_sprite(spr_condition_transformed, 0,x_condition, y_condition-100);
-	    x_condition += 32; // Move a posição X para a próxima condição
-	}
-}
-#endregion
+        # Salva as alterações no banco de dados
+        db.session.commit()
+        return redirect(url_for('homepage'))
+
+@app.route('/logout', methods=['GET','POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('homepage'))  # Redireciona para a homepage
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
+
 ```
 
 **Objects > Gameplay > Headball > obj_gameplay_hball > Create**
