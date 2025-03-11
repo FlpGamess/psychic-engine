@@ -13,10 +13,10 @@
         </thead>
         <tbody>
             <tr>
-                <td>PC-2.0.3.-01</td>
-                <td>Adicionar visual das condições</td>
+                <td>PC-0.1-01</td>
+                <td>Sistema de Login e Botões</td>
                 <td>Compilado</td>
-                <td>05/02/2025</td>
+                <td>09/03/2025</td>
             </tr>
         </tbody>
     </table>
@@ -66,7 +66,31 @@ class Usuario(db.Model, UserMixin):
 
 **main.py**
 
-Foi adicionada uma nova region para a lógica das condições. A variavel total_conditions conta o numero de condições que estão ativas no jogador, o vetor v_conditions armazena todas as condições que o jogador pode ter, após isto é feito um loop para contar quantas condições estão ativas no jogador e aumentar em 1 o valor de total_conditions. A variavel total_width calcula a largura total ocupada pelos icones e a x_start calcula a posição inicial das condições para sua centralização,as variáveis x_condition e y_condition são iniciadas com o valor de x_start e y inicial do player para calcular as posições iniciais
+Este arquivo é responsável por controlar as rotas, conexões, tudo no programa, ele é o que conecta o backend com frontend
+Foi importada a biblioteca flask responsável por redirecionar as rotas do programa com backend, request que recebe os valores do front e passa pro back, o redirect que redireciona as rotas e o url_for que redireciona as rotas através das funções.
+Foi importada a bibliote flask_login responsável por toda a gestão do login, manter o usuário conectado, deslogar o usuário e reverenciar o usuário atual no programa.
+É importada do arquivo models.py a classe Usuario
+É importada do arquivo bd.py a variável db.
+A variável app recebe o nome do banco, app_secret_key recebe uma chave para permitir que o login seja feito (esta chave é obrigatória e pode ser qualquer coisa)
+O app.config chama o URI do banco e se conecta com ele e após isto o bd é iniciado na linha abaixo
+
+A função user_loader é responsável por fazer o login do usuário a partir do id recebido e retornando o usuário atual fazendo com que o login continue até ser deslogado.
+A função homepage é responsável por chamar a pagina principal do programa
+A função login ela tem 2 estados:
+	Caso o método chamado seja GET ela irá chamar o login.html
+	Caso o método chamado seja POST ela irá receber as informações digitadas no login.html pelo usuário e caso corresponda ira logar pela funsão login_user e redirecionar para o homepage, caso alguma informação de login esteja errada o programa retornara uma mensagem de avisando:“Email ou senha incorretos”
+A função registrar ela tem 2 estados:
+	Caso o método chamado seja GET ele irá chamar o register.html
+	Caso o método chamado seja POST ele irá receber as informações digitadas no register.html pelo usuário e armazenar no banco de dados através da manipulação de objetos com a classe Usuario e chamara a função login_user, efetuando o login e redirecionando para a homepage
+
+A função atualizar tem 2 estados:
+	Caso o método chamado seja GET ele ira chamar o atualizar_usu.html
+	Caso o método chamado seja POST ele ia pegar a informação digitada pelo usuário e alterar no banco de dados sendo possível realizar uma atualização por vez.
+
+A função Logout encerra o login do usuário e encaminha para o homepage
+
+Este ultimo condicionamento com if __name__ serve para caso não exista um bd no ambiente ele cria e é um dos argumentos básicos para um programa Flask
+
 
 
 ```Python
@@ -170,740 +194,98 @@ if __name__ == '__main__':
 
 ```
 
-**Objects > Gameplay > Headball > obj_gameplay_hball > Create**
+**homepage.html**
+Foi feito a homepage  tendo uma condicional que se current_user estiver logado ele mostrara um icone de perfil no canto superior direito (imagem na pasta static) e o nome de quem logou com 2 botões para logout e atualizar as informações do usuarios, se não a homepage mostrara que a pessoa não esta logada e apresentara botões para ela ir para os htmls de login ou registro
 
-Para evitar que seja desenhado as condições quando tiver dentro de uma partida, foi preciso editar o código dos objetos de gameplay que tem em cada modo de jogo.
-
-```GML
-// Para ver o estado do jogo
-game_state = "Playing";
-```
-
-**Objects > Gameplay > Headball > obj_gameplay_hball > Step**
-
-Foi modificado para ver qual o estado que está o jogo, se está sendo jogado ou se está na tela de carregamento.
-
-```GML
-#region //Condições que ativam o jogador ganhar (preencher depois)
-#endregion
-#region //Controle de tempo da partida
-if(time_left > 0){
-	time_left--;
-	
-	game_state = "Playing";
-}
-
-#region //Programação para o final da partida
-if(game_over){
-	game_state = "Encerring";
-	
-	//Verifica se o placar dos player é igual e se a prorrogação ainda não foi ativada
-	if(players_score[0] == players_score[1] && extension == false){
-		if(final_countdown == false){
-			//Inicia a prorrogação
-			game_over = false;
-			extension = true;
-			time_left = 60 * 180;
-		}
-	}
-		
-	timer++;
-		
-	if(timer >= 60 * 5){ //Fazendo com qe depois de 5 segundos ele volte para a room selection;
-		room_goto(rm_selection);
-		obj_selection.confirmed1 = false;
-		obj_selection.confirmed2 = false;	
-	}
-}
-#endregion
-#endregion
-```
-
-**Objects > Gameplay > 1x1 > obj_gameplay > Create**
-
-Para evitar que seja desenhado as condições quando tiver dentro de uma partida, foi preciso editar o código dos objetos de gameplay que tem em cada modo de jogo.
-
-```GML
-// Para ver o estado do jogo
-game_state = "Playing";
-```
-
-**Objects > Gameplay > 1x1 > obj_gameplay > Step**
-
-```GML
-//Desenhando o vencendor do jogo
-draw_set_font(fnt_pixel);
-draw_set_halign(fa_center);
-draw_set_valign(fa_middle);
-draw_self();
-
-//Desenhando o tempo
-draw_text_ext_transformed(room_width/2, y, round(time_left/60), 5, 500, 4, 4, 0);
-
-
-#region // Desenhando 
-if(time_left <= 0 || obj_player1.life <= 0 || obj_player2.life <= 0){
-	game_state = "Encerring";
-	
-	// Ativando as invecibilidade
-	obj_player1.invincibility = true;
-	obj_player2.invincibility = true;
-	
-	// Verifica as condições de vitória ou empate
-	if(obj_player1.life > obj_player2.life){
-		draw_text_ext_transformed(room_width/2, room_height/2, "JOGADOR 1 VENCEU!", 5, 500, 4, 4, 0);
-	} else if(obj_player2.life > obj_player1.life){
-		draw_text_ext_transformed(room_width/2, room_height/2, "JOGADOR 2 VENCEU!", 5, 500, 4, 4, 0);
-	} else {
-		draw_text_ext_transformed(room_width/2, room_height/2, "EMPATE", 5, 100, 4, 4, 0);
-	}
-	
-	timer_red++;
-	
-	if(timer_red > (60 * 5)){
-		game_over = true;
-	}
-}
-
-if(game_over){
-	// Pegando o tamanho da tela
-	var _x1 = camera_get_view_x(view_camera[0]);
-	var _width = camera_get_view_width(view_camera[0]);
-	var _x2 = _x1 + _width;
-	var _middle_w = _x1 + (_width/2);
-	
-	var _y1 = camera_get_view_y(view_camera[0]);
-	var _height = camera_get_view_height(view_camera[0]);
-	var _y2 = _y1 + _height;
-	var _middle_h = _y1 + (_height/2);
-	
-	var _red = #9E0B0F;
-	
-	var _time = clamp(curr_time/60, 0, 1);
-	
-	value = ease_out(0, _width, _time);
-	draw_rectangle_color(_x1, _y1, _x1 + value, _height, _red, _red, _red, _red, 0);
-	
-	if(_time < 1){
-		curr_time += 1;
-	}
-	
-	if(alarm[1] = -1){
-		alarm[1] = 60 * 5;
-	}
-	
-	
-	draw_text_ext_transformed(room_width/2, room_height/2, "Redicionando para o menu inicial em " + string(round(alarm[1]/60)) + "s", 10, 250, 3, 3, 0);
-		
-}
-#endregion
-
-draw_set_halign(-1);
-draw_set_valign(-1);
-```
-
-**Scripts > scr_skills_attack**
-
-**scr_lucas_player_attack()**
-Todas as linhas referentes à variável knockback foram alteradas para move_r, já que agora a variável move_r é responsável por restringir o movimento geral. Além disso, foi adicionada a referência à variável fast do player (_player.fast), fazendo com que o Lucas ganhe a condição veloz em sua habilidade.
-
-**scr_naja_player_attack()**
-Todas as linhas que tinham referência à variável knockback no state "Stunned" foram alteradas para move_r, já que agora a variável move_r é responsável por restringir o movimento geral. Essas mudanças fazem com que a Naja aplique a condição stunado no inimigo.
- 
-```GML
-#region //Ataque do Lucas
-function scr_lucas_player_attack(_my_enemy, _player){
-	/* A ideia é que o Lucas consiga dar um dash na horizontal e conseguir dar dano
-	no inimigo durante todo o trajeto. */
-	
-	if(is_created == true){
-		//Pegando a máscara de colisão do jogador
-		sprite_index = spr_player1;
-		image_alpha = 0;
-		
-		_player.move_r = true;
-		_player.fast = true;
-		
-		timer = 0;
-		
-		is_created = false;
-	}
-	
-	timer++;
-	
-	x = _player.x;
-	y = _player.y;
-	
-	//Para faazer o efeito de Ghost
-	with(instance_create_layer(_player.x, _player.y, "Skills", obj_ghost)){
-		var _ghost = obj_ghost;
-		_ghost.sprite_index = _player.sprite_index;
-		_ghost.image_xscale = _player.image_xscale;
-		_ghost.image_yscale = _player.image_yscale;
-		_ghost.image_blend = c_yellow;
-		_ghost.image_alpha = 0.3;
-		_ghost.image_speed = 0;
-	}
-	
-	if(_player.player_direction > 0){
-		_player.hor_speed = 15;
-
-	} else if(_player.player_direction < 0){
-		_player.hor_speed = -15;
-	}
-	
-	_player.ver_speed = 0;
-	
-	if(place_meeting(_player.x, _player.y, _my_enemy)){
-		scr_damage_base(_my_enemy);
-	}
-
-	//se o timmer for maior/igual a 10 ou encostar com uma parede em x destroi
-	if(timer >= 10 || place_meeting(x + _player.hor_speed, y, colision_array)){
-		_player.move_r = false;
-		_player.fast = false;
-		instance_destroy();
-	}
-}
-#endregion
-
-#region //Ataque da Naja
-function scr_naja_player_attack(_my_enemy, _player){
-	/* A ideia do ataque da Naja é lançar um projétil para frente, semelhante a flecha do Acir
-	capaz de  pedrificar o jogador inimigo quando encostado */
-	
-	if(is_created == true){
-		sprite_index = spr_naja_attack1
-		my_direction =	_player.player_direction;
-		
-		if(my_direction < 0){
-			image_xscale = -(image_xscale)
-		}
-		
-		timer = 0
-		max_speed = 4;
-		
-		state = "Beam";
-		
-		//Lockando o "evento de Created"
-		is_created = false
-	}
-	
-	//Velocidade do projetil enquanto não acerta o inimigo
-	if(state == "Beam"){
-		hor_speed = my_direction * max_speed
-	
-		//Colisão com o eixo x
-		if(place_meeting(x + hor_speed, y, colision_array)){
-			while(!place_meeting(x + sign(hor_speed), y, colision_array)){ //Se ele estiver muito próximo (igual a velocidade horizontal) ele vai reduzindo por pixel andado.
-				x = x + sign(hor_speed);
-			}
-		
-			hor_speed = 0;
-			instance_destroy();
-		}
-			x = x + hor_speed;
-			
-			if(place_meeting(x, y, _my_enemy)){
-				state = "Stunned";
-			}
-	}
-	
-	//Contato com o inimigo
-	if(state == "Stunned"){	
-	
-	
-		//Grudando o ataque no inimigo para aplicar o efeito
-		x = _my_enemy.x;
-		y = _my_enemy.y - 50;
-		
-		
-		//Deixando o projétil grudado invisivel
-		image_alpha = 0;
-		
-		//Fazendo o inimigo ficar cinza quando tiver petrificado
-		_my_enemy.image_blend = c_gray;
-		
-		//Fazendo o player ficar no ultimo sprite
-		_my_enemy.image_index = _my_enemy.image_number-1;
-		
-		//Fazendo o player parar na hora e ficar stunnado
-		_my_enemy.move_r = true;
-		_my_enemy.stunned = true;
-		_my_enemy.hor_speed = 0;
-		timer++;
-		
-		//Timer do stun
-		if(timer >= 60 * 1.5){
-			_my_enemy.stunned = false;
-			_my_enemy.state = "Idle"; //Resetando ele para as animações normais
-			_my_enemy.move_r = false;
-			
-			//Voltando a cor do sprite 
-			_my_enemy.image_blend = c_white;
-			
-			//Destruindo o obj de efeito e o ataque
-			instance_destroy();
-		}
-	}
-}
-#endregion
-```
-
-Neste script, foram feitas alterações em todas as defesas dos personagens, exceto na da Bruna. Em todas as linhas que tinham referência à variável knockback, foram alteradas para a variável move_r, fazendo com que knockback seja usada apenas para sua condição, que é aplicada apenas na defesa da Bruna (até o momento).
-
-Abaixo, envio todo o script e explico as mudanças nas devidas funções:
-
-**scr_esqueleto_player_defense()**
-Foi feita apenas a mudança da variável knockback para move_r.
-
-**scr_erick_player_defense()**
-Foi feita apenas a mudança da variável knockback para move_r.
-
-**scr_acir_player_defense()**
-Foram adicionadas variáveis das respectivas condições aplicadas pelos states da habilidade:
-
-**spr_acir_defense1 (arara azul):**
-Adicionada a linha do _player.high_jump, permitindo que o Acir tenha a condição de pulo alto.
-
-**spr_acir_defense2 (onça):**
-Adicionada a linha do _player.fast, permitindo que o Acir tenha a condição de veloz.
-
-**spr_acir_defense3 (tatu):**
-Adicionada a linha do _player.slow, permitindo que o Acir tenha a condição de lento, além da de invencibilidade.
-
-**scr_lucas_player_defense()**
-Foi feita apenas a mudança da variável knockback para move_r, além de adicionar a linha do _player.fast, permitindo que o Lucas tenha a condição veloz, além de invencibilidade durante a habilidade.
-
-**scr_naja_player_defense()**
-Foi feita apenas a mudança da variável knockback para move_r, além de adicionar a linha do _player.fast, permitindo que a Naja tenha a condição veloz, além de transformada durante a habilidade.
-
-```GML
-#region //Defesa do Esqueleto
-function scr_esqueleto_player_defense(_my_enemy, _player){
-	if(is_created == true){
-		is_created = false;
-		
-		_player.stunned = true;
-		_player.move_r = true;
-		_player.hor_speed = 0;
-	}
-	
-	timer++;
-	
-	//Mudando para o estado caindo para que ele ainda seja capaz de causar dano
-	_player.state = "Fall";
-	
-	//Deixando o player imortal
-	_player.invincibility = true;
-	_player.sprite_index = spr_esqueleto_defense;
-	
-	//Lockando o sprite da animação em 1 frame
-	if(_player.image_index >= _player.image_number-1){
-		_player.image_index = _player.image_number-1;
-		
-		_player.move_r = true;
-		_player.hor_max = 0;
-	}
-	
-	//tempo de duração da habilidade	
-	if(timer >= 120 && _player.alarm[1] = -1){
-		_player.stunned = false;
-		_player.move_r = false;
-		_player.alarm[1] = 60;
-	}
-	
-	if(timer >= 180){
-		_player.invincibility = false;
-		instance_destroy();
-	}	
-		
-
-}
-#endregion
-
-#region //Defesa da Bruna
-function scr_bruna_player_defense(_my_enemy, _player){
-	/*
-	A ideia é que a Bruna crie uma chama que fique grande quando colida com o chão que destrua ataques 
-	inimigos e caso um inimigo colida com esta chama ele deve ser empurrado
-	*/
-	
-    if(is_created == true){ //Verificando se ele foi criado para pegar os valores apenas uma vez.
-		sprite_index = spr_bruna_defense1;
-		
-        //Lockando a variavel
-         is_created = false;
-		 
-		//Estado inicial da chama
-         state = "lfire"
-	}
-	
-	//Chama enquanto não colidir com o eixo x (queda livre)
-    if(state == "lfire"){
-		ver_speed = ver_speed + 0.15
-	
-	//Colisão com eixo y
-		if(place_meeting(x, y + ver_speed, colision_array)){
-			while(!place_meeting(x, y + sign(ver_speed), colision_array)){
-				y += sign(ver_speed);
-			}
-    
-			ver_speed = 0;
-	
-			//Muda para o estado de chama alta
-			state = "hfire";
-		}
-	
-	
-		y += ver_speed;
-    }
-	
-	//Estado chama alta
-    if(state == "hfire"){
-        sprite_index= spr_bruna_defense2
-		
-		//Colisão com o inimigo
-        if(place_meeting(x, y, _my_enemy)){
-			//Pegando a direção da repulsão
-			var _dir = point_direction(player_def.x, player_def.y, _my_enemy.x, _my_enemy.y)
-			_my_enemy.knockback = true;
-			
-			if(_my_enemy.knockback == true){
-				//Timer da duração da repulsão
-				_my_enemy.alarm[2] = 20 
-				//R para os 2 eixos
-				_my_enemy.hor_speed = lengthdir_x(6, _dir)
-				_my_enemy.ver_speed = lengthdir_y(6, _dir)
-			}
+```HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative; /* Para posicionar o ícone */
         }
-		
-		//Colidindo e destruindo ataques inimigos
-        if(place_meeting(x, y, enemy_atk)){
-            instance_destroy(enemy_atk)
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-		
-        timer++
-		
-		if(image_index > image_number-1){
-			image_index = image_number-2;
-		}
-		
-		//Tempo da habilidade
-		if(timer == 80){
-			instance_destroy();
-		}
-    }
-}
-
-#endregion
-
-#region //Defesa do Erick
-function scr_erick_player_defense(_my_enemy, _player){
-	/*A ideia é ele cria um escudo que mude de direção conforme ele muda, bloqueie projeteis
-	e se encostar no inimigo stune*/
-	if(is_created == true){
-		sprite_index = spr_erick_defense;
-		is_created = false;
-		
-		//estado inicial como escudo
-		state = "shield";
-		timer = 0;
-	}
-	
-	my_direction =	_player.player_direction;	
-	
-	//Estado escudo
-	if(state == "shield"){
-		timer++;
-		
-		//Timer de existencia do escudo neste modo
-		if(timer >= 80){
-			instance_destroy();	
-		}
-		
-		//Ajustando para que o escudo fique na frente do erick 
-		if(my_direction > 0){
-			if(image_xscale < 0){
-				image_xscale = abs(image_xscale);
-			}
-			
-			x = _player.x + 50
-			y = _player.y - 40 
-		}
-		//Ajustando para que o escudo fique na frente do erick 
-		if(my_direction < 0){
-			
-			if(image_xscale > 0){
-				image_xscale = -image_xscale;
-			}
-			
-			x = _player.x - 50
-			y = _player.y - 40
-		}
-		//Destroi ataques do inimigos e relar e se destroi
-		if(place_meeting(x, y, enemy_atk)){
-			instance_destroy(enemy_atk)
-			instance_destroy();
-		}
-		
-		//Se encostar no inimigo muda para o estado stun e reseta o timer de duração
-		if(place_meeting(x,y, _my_enemy)){
-			timer = 0;
-			state = "stun";
-		}
-	}
-	
-	//Estado de stun
-	if(state == "stun"){
-		timer++;
-		
-		//Escondendo o sprite
-		image_alpha = 0;
-		
-		//Fazendo o sprite se manter dentro do inimigo
-		x = _my_enemy.x;
-		y = _my_enemy.y - 40;
-		
-		//Variaveis para o stun
-		_my_enemy.stunned = true;
-		_my_enemy.move_r = true;
-		_my_enemy.hor_speed = 0;
-		
-		//timer do stun
-		if(timer >= 40){
-			_my_enemy.stunned = false;
-			_my_enemy.move_r = false;
-			instance_destroy();
-		}
-	}
-}
-#endregion
-
-#region //Defesa do Acir
-#region // Escolha do Totem do Acir
-function scr_acir_defense_choice(_player){
-	if(is_created == true){	
-		toten = choose(spr_acir_defense1, spr_acir_defense2, spr_acir_defense3);
-		sprite_index = toten;
-		_player.toten = toten;
-		is_created = false;
-	}
-	
-	x = _player.x;
-	y = _player.y - 100;
-}
-#endregion
-
-
-function scr_acir_player_defense(_my_enemy, _player, _toten){
-	if(is_created == true){
-		//Escolhe o totem;
-		sprite_index = _toten;
-		
-		//Pegando  direção do totem
-		my_direction = _player.player_direction;
-		
-		//Escolhe a quantidade de vida
-		life = 1;
-		
-		//Diminuindo o damanho do toten
-		image_xscale = 2.5;
-		image_yscale = 2.5;
-		
-		//Não deixando ele loopar esse evento
-		is_created = false;
-	}
-
-	if(place_meeting(x, y + ver_speed, colision_array)){
-		while(!place_meeting(x, y + sign(ver_speed), colision_array)){
-			y += sign(ver_speed);
-		}
-			ver_speed = 0;
-	}
-	
-	y += ver_speed;
-
-	//Para o inimigo pular na cabeça do totem
-	var _broken_toten = instance_place(x ,y + 14 , _my_enemy);
-
-	if(_broken_toten && _my_enemy.state == "Fall" && life = 1){
-		_my_enemy.state = "Jump";
-		_my_enemy.ver_speed = -7;
-		life = 0;
-	}
-	
-	//Para o jogador pular na cabeça do totem
-	var _jump_toten = instance_place(x ,y + 14 , _player);
-
-	if(_jump_toten && _player.state == "Fall" && life = 1){
-		_player.state = "Jump";
-		_player.ver_speed = -7;
-	}
-
-	//Script do funcionamento das skills
-	if (timer < 300){
-		timer++;
-	
-		switch(toten){
-			case spr_acir_defense1:
-			_player.high_jump = true;
-				if(_player.jump && can_jump == 0){
-					_player.ver_speed = -8.5;
-					can_jump = 1;
-				}
-					
-				if(place_meeting(_player.x, _player.y + 1, colision_array)){
-					can_jump = 0;
-				}
-			break;
-			
-			case spr_acir_defense2:
-				_player.max_speed = 6.5;
-				_player.fast = true
-				
-			break;
-			
-			case spr_acir_defense3:
-				_player.invincibility = true;
-				_player.slow = true
-				
-				if(_player.alarm[1] = -1){
-					alarm[1] = 300;
-				}
-				
-				
-				if(_player.jump && can_jump == 0){
-					_player.ver_speed = -6.5;
-					can_jump = 1;
-				}
-					
-				if(place_meeting(_player.x, _player.y + 1, colision_array)){
-					can_jump = 0;
-				}
-				
-				_player.max_speed = 4.2;
-			break;
-		}
-	} else { //Caso tempo encerre 
-		life = 0;
-	}
-	
-	if(life == 0){
-		//Animação de morte do totem;
-		switch(toten){
-			case spr_acir_defense1:
-				sprite_index = spr_acir_defense1_1
-			break;
-			
-			case spr_acir_defense2:
-				sprite_index = spr_acir_defense2_2
-			break;
-			
-			case spr_acir_defense3:
-				sprite_index = spr_acir_defense3_3
-				
-			break;
-		}
-	
-		if(image_index >= image_number-1){
-			instance_destroy()
-		}
-	
-		//Retorna as variaveis base;
-		_player.invincibility = false;
-		_player.slow = false;
-		_player.fast = false;
-		_player.high_jump = false;
-		
-		if(_player.jump && place_meeting(_player.x, _player.y, colision_array)){
-			_player.ver_speed = -7;
-			
-		}
-	
-		_player.max_speed = 5;
-	}
-}
-#endregion
-
-#region //Defesa do Lucas
-function scr_lucas_player_defense(_my_enemy, _player){
-	/* A ideia da defesa é um dash que é capaz de ficar invencível durante o tempo desse dash
-	, fazendo com que ele tenha bastante mobilidade e que consigar criar jogadas com isso. */
-	if(is_created == true){
-		_player.move_r = true;
-		_player.invincibility = true;
-		_player.fast = true;
-		_player.alarm[1] = 60;
-		//Tempo do dash
-		timer = 0;
-		is_created = false;
-	}
-	
-	timer++;
-	
-	with(instance_create_layer(_player.x, _player.y, "Skills", obj_ghost)){
-		var _ghost = obj_ghost;
-		_ghost.sprite_index = _player.sprite_index;
-		_ghost.image_xscale = _player.image_xscale;
-		_ghost.image_yscale = _player.image_yscale;
-		_ghost.image_blend = c_blue;
-		_ghost.image_alpha = 0.3;
-		_ghost.image_speed = 0;
-	}
-	
-	//ganha velocidade dependendo da direção
-	if(_player.player_direction > 0){
-		_player.hor_speed = 15;
-	} else if(_player.player_direction < 0){
-		_player.hor_speed = -15;
-	}
-	
-	_player.ver_speed = 0;
-	
-	//Se o timer for maior/igual a 10 ou encostar com uma parede em x destroi
-	if(timer >= 10 || place_meeting(x + _player.hor_speed, y, obj_colision)){
-		_player.move_r = false;
-		_player.fast = false;
-		_player.invincibility = false;
-		instance_destroy();
-	}
-}
-#endregion 
-
-#region //Defesa da Naja
-function scr_naja_player_defense(_my_enemy, _player){
-    /* A ideia da defesa da */
-    if(is_created == true){
-        timer = 0;
-        _player.max_speed = 12;
-        _player.transformed = true;
-		_player.fast = true;
-		
-        //Lockando o evento "Create"
-        is_created = false;
-    }
-
-    timer++;
-
-    _player.sprite_index = spr_naja_defense1;
-
-    if(_player.image_index >= _player.image_number-1){
-        _player.image_index = _player.image_number-1;
-    }
-
-    if(timer >= 60){
-        _player.sprite_index = spr_naja_defense2;
-
-        if(_player.image_index >= _player.image_number-1){
-            _player.max_speed = 5;
-            _player.transformed = false;
-			_player.fast= false;
-            instance_destroy();
+        h1 {
+            color: #333;
         }
-    }
-}
-#endregion
+        p {
+            color: #666;
+        }
+        .logout-button, .login-button, .register-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .logout-button:hover, .login-button:hover, .register-button:hover {
+            background-color: #cc0000;
+        }
+        /* Estilo do ícone */
+        .user-icon {
+            position: absolute; /* Posiciona o ícone */
+            top: 20px; /* Distância do topo */
+            right: 20px; /* Distância da direita */
+            width: 40px; /* Tamanho do ícone */
+            height: 40px;
+            cursor: pointer; /* Cursor de ponteiro */
+        }
+    </style>
+</head>
+<body>
+
+
+    {% if current_user.is_authenticated %}
+    <!-- Ícone no canto superior direito -->
+     <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="user-icon">
+    <div class="container">
+        <h1>Bem-vindo à Minha Página, {{ current_user.nome }}!</h1>
+        <p>Esta é uma página HTML básica.</p>
+        <p>Você pode personalizar o conteúdo e o estilo conforme necessário.</p>
+        <!-- Botão de Logout -->
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </a>
+    <!-- Botão de Registrar -->
+    <a href="{{ url_for('atualizar') }}">
+        <button type="button" class="atulization-button">Atualizar Conta</button>
+    </a>
+    </div>
+    {% else %}
+        <h1>Você não está logado, irmão.</h1>
+        <!-- Botão de Login -->
+        <a href="{{ url_for('login') }}">
+            <button type="button" class="login-button">Login</button>
+        </a>
+        <!-- Botão de Registrar -->
+        <a href="{{ url_for('registrar') }}">
+            <button type="button" class="register-button">Registrar</button>
+        </a>
+    {% endif %}
+</body>
+</html>	
+
 ```
 
 ### 3. Autores
