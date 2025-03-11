@@ -195,6 +195,7 @@ if __name__ == '__main__':
 ```
 
 **homepage.html**
+
 Foi feito a homepage  tendo uma condicional que se current_user estiver logado ele mostrara um icone de perfil no canto superior direito (imagem na pasta static) e o nome de quem logou com 2 botões para logout e atualizar as informações do usuarios, se não a homepage mostrara que a pessoa não esta logada e apresentara botões para ela ir para os htmls de login ou registro
 
 ```HTML
@@ -285,6 +286,156 @@ Foi feito a homepage  tendo uma condicional que se current_user estiver logado e
     {% endif %}
 </body>
 </html>	
+
+```
+
+**login.html**
+
+Foi feito a pagina do login que atraves de um formulario receba as informações de login do usuario, ele tambem possui um botão para encaminhar o usuario a pagina de registro
+
+```HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página</title>
+</head>
+<body>
+   <form action="" method="post">
+    Email: <input type="text" name="emailForm" id=""><br>
+    Senha: <input type="password" name="senhaForm" id=""><br>
+    <input type="submit" value="Adentre"> 
+</form>
+<h1>Não possui uma conta? Registre-se a baixo.</h1>
+<!-- Botão de register -->
+<form action="{{ url_for('registrar') }}" method="get">
+    <button type="submit" class="register-button">Registrar</button>
+</form>
+</body>
+</html>
+
+```
+
+**register.html**
+
+Foi feito a pagina do register que atraves de um formulario receba as informações de login do usuario, ele tem um botão que redireciona para a pagina de login
+
+```HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Página</title>
+</head>
+<body>
+   <form action="" method="post">
+    Nome: <input type="text" name="nomeForm" id=""><br>
+    Email: <input type="text" name="emailForm" id=""><br>
+    Senha: <input type="password" name="senhaForm" id=""><br>
+    <input type="submit" value="Submeta"> 
+   </form>
+    <h1>Ja possui uma conta ? Faça login abaixo</h1>
+    <!-- Botão de Login -->
+    <form action="{{ url_for('login') }}" method="get">
+        <button type="submit" class="login-button">Login</button>
+</form>
+</body>
+</html>
+
+```
+
+**atualizar_usu.html**
+
+foi feita a pagina de atualização de informações do usuario onde recebe a nova informação que o usuario quer alterar com seus botões, alem disto possui um botão para retornar o usuario a homepage
+
+```HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Informações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Atualizar Informações</h1>
+          <!-- Formulário para atualizar nome -->
+          <form action="{{ url_for('atualizar') }}" method="post">
+            <label for="novo_nome">Novo Nome:</label>
+            <input type="text" id="novo_nome" name="novo_valor" placeholder="Digite o novo nome">
+            <input type="hidden" name="campo" value="nome">
+            <button type="submit">Atualizar Nome</button>
+        </form>
+
+        <!-- Formulário para atualizar email -->
+        <form action="{{ url_for('atualizar') }}" method="post">
+            <label for="novo_email">Novo Email:</label>
+            <input type="text" id="novo_email" name="novo_valor" placeholder="Digite o novo email">
+            <input type="hidden" name="campo" value="email">
+            <button type="submit">Atualizar Email</button>
+        </form>
+
+        <!-- Formulário para atualizar senha -->
+        <form action="{{ url_for('atualizar') }}" method="post">
+            <label for="nova_senha">Nova Senha:</label>
+            <input type="password" id="nova_senha" name="novo_valor" placeholder="Digite a nova senha">
+            <input type="hidden" name="campo" value="senha">
+            <button type="submit">Atualizar Senha</button>
+        </form>
+
+        <!-- Botão para voltar à homepage -->
+        <a href="{{ url_for('homepage') }}">
+            <button type="button">Voltar</button>
+        </a>
+    </div>
+</body>
+</html>
 
 ```
 
