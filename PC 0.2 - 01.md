@@ -24,6 +24,7 @@
 
 ### 1. Geral
 O arquivo **main.py** recebeu alterações com a adição de uma nova rota chamada /upload_imagem e 2 funções para aceitar formatos de arquivos de imagem e  verifica-las
+foi criada uma pasta de uploads dentro da pasta static para guardar os arquivos de imagem das fotos de perfil
 ---
 
 ### 2. Programação
