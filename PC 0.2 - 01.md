@@ -13,104 +13,62 @@
         </thead>
         <tbody>
             <tr>
-                <td>PC-0.1-01</td>
-                <td>Sistema de Login e Botões</td>
+                <td>PC-0.2-01</td>
+                <td>Foto de Perfil do Usuario</td>
                 <td>Compilado</td>
-                <td>09/03/2025</td>
+                <td>11/03/2025</td>
             </tr>
         </tbody>
     </table>
 </div>
 
 ### 1. Geral
-Foi criado o arquivo **Db.py** sendo um script que reverencia ao SQLAlchemy
-Foi criado o arquivo **models.py** sendo um script que guarda as classes do programa que serão usadas para a manipulação do banco de dados
-Foi criado o **main.py** responsável pelas rotas, conexão com o banco de dados, etc
-Foi criado o **homepage.html** sendo a pagina principal do programa quando o usuário acessar a aplicação variando se o usuário estiver ou não logado
-Foi criado o **atualizar_usu.html** sendo responsável por atualizar informações do usuário no banco como troca de email, senha etc.
-Foi criado o **login.html responsável** pelo login do usuário e acesso ao site
-Foi criado o **register.html** responsável por registrar o usuário no banco de dados e consequentemente enviar o login para o banco.
-No **main.py** foram criadas as rotas de login,registrar,homepage,logout e atualizar_usu respectivamente responsaveis por: login, registro, pagina inicial, logout e atualização das informações do usuario
-Foram criados botões no html responsaveis por direcionar o usuario para um novo html
+O arquivo **main.py** recebeu alterações com a adição de uma nova rota chamada /upload_imagem e 2 funções para aceitar formatos de arquivos de imagem e  verifica-las
 ---
 
 ### 2. Programação
 
-**Db.py**
-
-Foi importado a biblioteca fask_sqlalchemy para a conexão do banco de dados, a variável db recebe o modelo do SQLAlchemy a fazendo ter todas as propriedades para manipulação de um banco:
-```Python
-from flask_sqlalchemy import SQLAlchemy 
-db = SQLAlchemy()
-
-
-```
-
-**models.py**
-
-Foi importada a variável db do arquivo Db.py, após isso é criada a classe Usuario recebendo o modelo de classe para banco de dados, ela reverencia a tabelo usuários tendo seus componentes o id,nome,email,senha e foto_perfil_url.
-
-```Python
-from db import db
-from flask_login import UserMixin
-
-class Usuario(db.Model, UserMixin):
-    __tablename__ = 'usuarios'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nome = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=False, unique=True)
-    senha = db.Column(db.String(255), nullable=False)
-    foto_perfil_url = db.Column(db.String(255))
-
-```
-
 **main.py**
-
-Este arquivo é responsável por controlar as rotas, conexões, tudo no programa, ele é o que conecta o backend com frontend
-Foi importada a biblioteca flask responsável por redirecionar as rotas do programa com backend, request que recebe os valores do front e passa pro back, o redirect que redireciona as rotas e o url_for que redireciona as rotas através das funções.
-Foi importada a bibliote flask_login responsável por toda a gestão do login, manter o usuário conectado, deslogar o usuário e reverenciar o usuário atual no programa.
-É importada do arquivo models.py a classe Usuario
-É importada do arquivo bd.py a variável db.
-A variável app recebe o nome do banco, app_secret_key recebe uma chave para permitir que o login seja feito (esta chave é obrigatória e pode ser qualquer coisa)
-O app.config chama o URI do banco e se conecta com ele e após isto o bd é iniciado na linha abaixo
-
-A função user_loader é responsável por fazer o login do usuário a partir do id recebido e retornando o usuário atual fazendo com que o login continue até ser deslogado.
-A função homepage é responsável por chamar a pagina principal do programa
-A função login ela tem 2 estados:
-	Caso o método chamado seja GET ela irá chamar o login.html
-	Caso o método chamado seja POST ela irá receber as informações digitadas no login.html pelo usuário e caso corresponda ira logar pela funsão login_user e redirecionar para o homepage, caso alguma informação de login esteja errada o programa retornara uma mensagem de avisando:“Email ou senha incorretos”
-A função registrar ela tem 2 estados:
-	Caso o método chamado seja GET ele irá chamar o register.html
-	Caso o método chamado seja POST ele irá receber as informações digitadas no register.html pelo usuário e armazenar no banco de dados através da manipulação de objetos com a classe Usuario e chamara a função login_user, efetuando o login e redirecionando para a homepage
-
-A função atualizar tem 2 estados:
-	Caso o método chamado seja GET ele ira chamar o atualizar_usu.html
-	Caso o método chamado seja POST ele ia pegar a informação digitada pelo usuário e alterar no banco de dados sendo possível realizar uma atualização por vez.
-
-A função Logout encerra o login do usuário e encaminha para o homepage
-
-Este ultimo condicionamento com if __name__ serve para caso não exista um bd no ambiente ele cria e é um dos argumentos básicos para um programa Flask
-
+Foram importadas 2 novas bibliotecas a os e werkzeug.utils responsaveis por manipulações de arquivos
+com app.config são definidos os tipos de arquivos de imagens permitidos armazenados no dicionario ALLOWED_EXTENSIONS e é criada a pasta uploads para guardar as imagens de perfil
+O aplicativo atraves do os cria a pasta uploads caso ela não existe(que armazenara as imagens de perfil)
+A função allowed_file verifica se o tipo do arquivo salvado corresponde aos tipos permitidos no programa
+A rota upload_imagem ela recebe uma imagem enviada pelo usuario verificando se não existe uma anteriormente, caso tenho ele exclui a imagem antiga da pasta uploads
+e após isto salva a nova na mesma pasta, depois pega o endereço deste arquivo de imagem e atualiza no campo foto_perfil_uri do banco de dados e redireciona para a homepage
+ a linhas novas:46,47,51,52,58 a 60,68 a 71,  142 a 175
 
 
 ```Python
-from flask import Flask, render_template, request,redirect,url_for
+from flask import Flask, render_template, request,redirect,url_for, render_template
 from flask_login import LoginManager,login_user,login_required,logout_user, current_user
 from models import Usuario
 from db import db
+import os 
+from werkzeug.utils import secure_filename
 
 app= Flask(__name__)
 app.secret_key = 'receba'
+app.config['UPLOAD_FOLDER'] = 'static/uploads' #pasta que salva as imagens
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'} #tipos de img permitidas
 lm = LoginManager(app)
 lm.login_view = 'login'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:n0r1@localhost:5432/eventos'
 db.init_app(app)
+
+#criando uma pasta uloads caso não exista
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 # Função para carregar o usuário
 @lm.user_loader
 def user_loader(id):
     usuario = db.session.query(Usuario).filter_by(id=id).first()
     return usuario
+
+#Função que verifica a extensão do arquivo
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 # Rota principal
@@ -145,22 +103,22 @@ def registrar():
         nome = request.form['nomeForm']
         email = request.form['emailForm']
         senha = request.form['senhaForm']
-
+        
         novo_usuario = Usuario(nome=nome, email=email, senha=senha)
         db.session.add(novo_usuario)
         db.session.commit()
-
+        
         login_user(novo_usuario)
 
 
         return redirect(url_for('homepage'))  # Redireciona para a homepage
-
+    
 @app.route("/atualizar_usu", methods=['GET', 'POST'])
 @login_required
 def atualizar():
     if request.method == 'GET':
         return render_template('atualizar_usu.html')
-
+    
     elif request.method == 'POST':
         # Verifica qual campo o usuário quer atualizar
         campo = request.form.get('campo')
@@ -180,23 +138,59 @@ def atualizar():
         # Salva as alterações no banco de dados
         db.session.commit()
         return redirect(url_for('homepage'))
+    
+# Rota para upload de imagem
+@app.route('/upload_imagem', methods=['POST'])
+@login_required
+def upload_imagem():
+    if 'foto_perfil' not in request.files:
+        return 'Nenhum arquivo enviado', 400
 
+    file = request.files['foto_perfil']
+    if file.filename == '':
+        return 'Nenhum arquivo selecionado', 400
+
+    if file and allowed_file(file.filename):
+        # Verifica se o usuário já tem uma foto de perfil
+        if current_user.foto_perfil_url:
+            # Caminho completo da imagem antiga
+            caminho_imagem_antiga = os.path.join(app.config['UPLOAD_FOLDER'], current_user.foto_perfil_url.split('/')[-1])
+            
+            # Verifica se o arquivo existe e exclui
+            if os.path.exists(caminho_imagem_antiga):
+                os.remove(caminho_imagem_antiga)
+
+        # Salva a nova imagem
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        # Atualiza o caminho da imagem no banco de dados
+        current_user.foto_perfil_url = f"uploads/{filename}"
+        db.session.commit()
+
+        return redirect(url_for('homepage'))
+    else:
+        return 'Tipo de arquivo não permitido. Use PNG ou JPG.', 400
+
+    
 @app.route('/logout', methods=['GET','POST'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('homepage'))  # Redireciona para a homepage
-
+    
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
 ```
 
 **homepage.html**
 
-Foi feito a homepage  tendo uma condicional que se current_user estiver logado ele mostrara um icone de perfil no canto superior direito (imagem na pasta static) e o nome de quem logou com 2 botões para logout e atualizar as informações do usuarios, se não a homepage mostrara que a pessoa não esta logada e apresentara botões para ela ir para os htmls de login ou registro
+foi feita uma condicional para verificar se o usuario atualmente logado possui uma uri de imagem no banco de dados e caso tenha o programa a procura e exibe na home page no lugar do icone generico,
+caso nao tenha uma uri, o programa exibira um icone preto padrão.
+linhas adicionadas/mudadas: 251 a 257
 
 ```HTML
 <!DOCTYPE html>
@@ -230,7 +224,7 @@ Foi feito a homepage  tendo uma condicional que se current_user estiver logado e
         p {
             color: #666;
         }
-        .logout-button, .login-button, .register-button {
+        .logout-button, .login-button, .register-button, .atulization-button {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #ff4d4d;
@@ -239,7 +233,7 @@ Foi feito a homepage  tendo uma condicional que se current_user estiver logado e
             border-radius: 5px;
             cursor: pointer;
         }
-        .logout-button:hover, .login-button:hover, .register-button:hover {
+        .logout-button:hover, .login-button:hover, .register-button:hover, .atulization-button:hover {
             background-color: #cc0000;
         }
         /* Estilo do ícone */
@@ -254,24 +248,34 @@ Foi feito a homepage  tendo uma condicional que se current_user estiver logado e
     </style>
 </head>
 <body>
-
-
     {% if current_user.is_authenticated %}
-    <!-- Ícone no canto superior direito -->
-     <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="user-icon">
-    <div class="container">
+  <!-- Ícone no canto superior direito -->
+{% if current_user.foto_perfil_url %}
+    <img src="{{ url_for('static', filename=current_user.foto_perfil_url) }}" alt="Ícone do Usuário" class="user-icon">
+{% else %}
+    <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="user-icon">
+{% endif %}
+<div class="container">
         <h1>Bem-vindo à Minha Página, {{ current_user.nome }}!</h1>
         <p>Esta é uma página HTML básica.</p>
         <p>Você pode personalizar o conteúdo e o estilo conforme necessário.</p>
+
+        <!-- Formulário de Upload de Imagem -->
+        <form action="{{ url_for('upload_imagem') }}" method="post" enctype="multipart/form-data">
+            <label for="foto_perfil">Escolha uma imagem de perfil:</label>
+            <input type="file" name="foto_perfil" id="foto_perfil" accept="image/png, image/jpeg">
+            <button type="submit" class="logout-button">Enviar Imagem</button>
+        </form>
+
         <!-- Botão de Logout -->
         <form action="{{ url_for('logout') }}" method="post">
             <button type="submit" class="logout-button">Logout</button>
         </form>
-    </a>
-    <!-- Botão de Registrar -->
-    <a href="{{ url_for('atualizar') }}">
-        <button type="button" class="atulization-button">Atualizar Conta</button>
-    </a>
+
+        <!-- Botão de Atualizar Conta -->
+        <a href="{{ url_for('atualizar') }}">
+            <button type="button" class="atulization-button">Atualizar Conta</button>
+        </a>
     </div>
     {% else %}
         <h1>Você não está logado, irmão.</h1>
@@ -285,158 +289,7 @@ Foi feito a homepage  tendo uma condicional que se current_user estiver logado e
         </a>
     {% endif %}
 </body>
-</html>	
-
-```
-
-**login.html**
-
-Foi feito a pagina do login que atraves de um formulario receba as informações de login do usuario, ele tambem possui um botão para encaminhar o usuario a pagina de registro
-
-```HTML
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Página</title>
-</head>
-<body>
-   <form action="" method="post">
-    Email: <input type="text" name="emailForm" id=""><br>
-    Senha: <input type="password" name="senhaForm" id=""><br>
-    <input type="submit" value="Adentre"> 
-</form>
-<h1>Não possui uma conta? Registre-se a baixo.</h1>
-<!-- Botão de register -->
-<form action="{{ url_for('registrar') }}" method="get">
-    <button type="submit" class="register-button">Registrar</button>
-</form>
-</body>
 </html>
-
-```
-
-**register.html**
-
-Foi feito a pagina do register que atraves de um formulario receba as informações de login do usuario, ele tem um botão que redireciona para a pagina de login
-
-```HTML
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Página</title>
-</head>
-<body>
-   <form action="" method="post">
-    Nome: <input type="text" name="nomeForm" id=""><br>
-    Email: <input type="text" name="emailForm" id=""><br>
-    Senha: <input type="password" name="senhaForm" id=""><br>
-    <input type="submit" value="Submeta"> 
-   </form>
-    <h1>Ja possui uma conta ? Faça login abaixo</h1>
-    <!-- Botão de Login -->
-    <form action="{{ url_for('login') }}" method="get">
-        <button type="submit" class="login-button">Login</button>
-</form>
-</body>
-</html>
-
-```
-
-**atualizar_usu.html**
-
-foi feita a pagina de atualização de informações do usuario onde recebe a nova informação que o usuario quer alterar com seus botões, alem disto possui um botão para retornar o usuario a homepage
-
-```HTML
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atualizar Informações</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-        }
-        form {
-            margin-top: 20px;
-        }
-        input[type="text"], input[type="password"] {
-            padding: 10px;
-            margin: 5px 0;
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #cc0000;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Atualizar Informações</h1>
-          <!-- Formulário para atualizar nome -->
-          <form action="{{ url_for('atualizar') }}" method="post">
-            <label for="novo_nome">Novo Nome:</label>
-            <input type="text" id="novo_nome" name="novo_valor" placeholder="Digite o novo nome">
-            <input type="hidden" name="campo" value="nome">
-            <button type="submit">Atualizar Nome</button>
-        </form>
-
-        <!-- Formulário para atualizar email -->
-        <form action="{{ url_for('atualizar') }}" method="post">
-            <label for="novo_email">Novo Email:</label>
-            <input type="text" id="novo_email" name="novo_valor" placeholder="Digite o novo email">
-            <input type="hidden" name="campo" value="email">
-            <button type="submit">Atualizar Email</button>
-        </form>
-
-        <!-- Formulário para atualizar senha -->
-        <form action="{{ url_for('atualizar') }}" method="post">
-            <label for="nova_senha">Nova Senha:</label>
-            <input type="password" id="nova_senha" name="novo_valor" placeholder="Digite a nova senha">
-            <input type="hidden" name="campo" value="senha">
-            <button type="submit">Atualizar Senha</button>
-        </form>
-
-        <!-- Botão para voltar à homepage -->
-        <a href="{{ url_for('homepage') }}">
-            <button type="button">Voltar</button>
-        </a>
-    </div>
-</body>
-</html>
-
 ```
 
 ### 3. Autores
