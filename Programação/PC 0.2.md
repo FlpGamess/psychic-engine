@@ -15,7 +15,7 @@
             <tr>
                 <td>PC-0.2-01</td>
                 <td>Foto de Perfil do Usuario</td>
-                <td>Em Espera</td>
+                <td>Compilado</td>
                 <td>11/03/2025</td>
             </tr>
         </tbody>
