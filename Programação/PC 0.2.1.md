@@ -30,13 +30,7 @@ O arquivo **homepage.html** recebeu um novo botão para chamar esta função, el
 ### 2. Programação
 
 **main.py**
-Foram importadas 2 novas bibliotecas a os e werkzeug.utils responsaveis por manipulações de arquivos
-com app.config são definidos os tipos de arquivos de imagens permitidos armazenados no dicionario ALLOWED_EXTENSIONS e é criada a pasta uploads para guardar as imagens de perfil
-O aplicativo atraves do os cria a pasta uploads caso ela não existe(que armazenara as imagens de perfil)
-A função allowed_file verifica se o tipo do arquivo salvado corresponde aos tipos permitidos no programa
-A rota upload_imagem ela recebe uma imagem enviada pelo usuario verificando se não existe uma anteriormente, caso tenho ele exclui a imagem antiga da pasta uploads
-e após isto salva a nova na mesma pasta, depois pega o endereço deste arquivo de imagem e atualiza no campo foto_perfil_uri do banco de dados e redireciona para a homepage
- a linhas novas:46,47,51,52,58 a 60,68 a 71,  142 a 175
+
 
 
 ```Python
