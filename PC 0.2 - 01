@@ -422,7 +422,6 @@ if __name__ == '__main__':
 
 **homepage.html**
 
-Foi feito a homepage  tendo uma condicional que se current_user estiver logado ele mostrara um icone de perfil no canto superior direito (imagem na pasta static) e o nome de quem logou com 2 botões para logout e atualizar as informações do usuarios, se não a homepage mostrara que a pessoa não esta logada e apresentara botões para ela ir para os htmls de login ou registro
 
 ```HTML
 <!DOCTYPE html>
