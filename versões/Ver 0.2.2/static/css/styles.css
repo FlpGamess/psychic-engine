@@ -1,0 +1,32 @@
+.header{
+    text-align: center;
+    color: black;
+}
+
+.container_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    margin-top: 50px;
+}
+
+.user-icon {
+    position: absolute; /* Posiciona o ícone */
+    top: 30px; /* Distância do topo */
+    right: 30px; /* Distância da direita */
+    width: 50px; /* Tamanho do ícone */
+    height: 50px;
+    margin-bottom: 10px; /* Espaço entre o ícone e os botões */
+    cursor: pointer; /* Cursor de ponteiro */
+}
+
+
+.logout-button, .login-button, .register-button, .atulization-button, .delete-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 64, 64);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

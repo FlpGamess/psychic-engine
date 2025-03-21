@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+        <title>Eventos</title>
+    </head>
+
+    <body>
+        <h1>Criar Novo Evento</h1>
+    
+        <form action="{{ url_for('criar') }}" method="post">
+            <!-- Campo para o título do evento -->
+            <div>
+                <label for="tituloForm">Título do Evento:</label>
+                <input type="text" id="tituloForm" name="tituloForm" placeholder="Digite o título do evento" required>
+            </div>
+    
+            <!-- Campo para a data de início das inscrições -->
+            <div>
+                <label for="dataInscForm">Data de Início das Inscrições:</label>
+                <input type="date" id="dataInscForm" name="dataInscForm" required>
+            </div>
+    
+            <!-- Campo para a data limite das inscrições -->
+            <div>
+                <label for="dataPrazoForm">Data Limite das Inscrições:</label>
+                <input type="date" id="dataPrazoForm" name="dataPrazoForm" required>
+            </div>
+    
+            <!-- Campo para a data do evento -->
+            <div>
+                <label for="dataEventoForm">Data do Evento:</label>
+                <input type="date" id="dataEventoForm" name="dataEventoForm" required>
+            </div>
+    
+            <!-- Campo para a localização do evento -->
+            <div>
+                <label for="localizacaoForm">Localização:</label>
+                <input type="text" id="localizacaoForm" name="localizacaoForm" placeholder="Digite o local do evento" required>
+            </div>
+    
+            <!-- Campo para a descrição do evento -->
+            <div>
+                <label for="descricaoForm">Descrição:</label>
+                <textarea id="descricaoForm" name="descricaoForm" placeholder="Descreva o evento" required></textarea>
+            </div>
+    
+            <!-- Botão de envio -->
+            <div>
+                <button type="submit">Criar Evento</button>
+            </div>
+        </form>
+    
+        <!-- Link para voltar à página inicial -->
+        <div>
+            <a href="{{ url_for('homepage') }}">Voltar à Página Inicial</a>
+        </div>
+    </body>
+</html>
