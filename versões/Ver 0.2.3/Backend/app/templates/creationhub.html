@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+    <title>Home_Organizador</title>
+</head>
+<body>
+
+    <div class="user-icon">
+        {% if current_user.foto_perfil_url %}
+            <img src="{{ url_for('static', filename=current_user.foto_perfil_url) }}" alt="Ícone do Usuário" class="user-icon">
+        {% else %}
+            <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="user-icon">
+        {% endif %}
+    </div>
+    <div class="container_profile">
+        <!-- Formulário de Upload de Imagem -->
+        <form action="{{ url_for('usuario.upload_imagem_route') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="foto_perfil" accept="image/*" required>
+            <br>
+            <button onclick="return validarEnvio()">Enviar</button>
+        </form>
+
+
+    <div class="button">
+        <a>
+            <!-- Botão para redirecionar para a pagina de criar eventos -->
+            <form action="{{ url_for('evento.criar_route') }}" method="get">
+                <button type="submit" class="evento-button">Criar Novo Evento</button>
+            </form>
+        </a>
+    </div>
+
+    <div class="button">
+        <a>
+            <!-- Botão para redirecionar para a pagina de criar eventos -->
+            <form action="{{ url_for('evento.visualizar_route') }}" method="get">
+                <button type="submit" class="evento-button">vizualizar Eventos</button>
+            </form>
+        </a>
+    </div>
+
+    <!-- Botão para voltar à homepage -->
+    <a href="{{ url_for('home.homepage') }}">
+        <button type="button">Voltar</button>
+    </a>
+
+</body>
+</html>

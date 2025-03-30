@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+    <title>Home</title>
+</head>
+<body>
+
+    {% if current_user.is_authenticated %}
+    <div class="user-icon">
+        {% if current_user.foto_perfil_url %}
+            <img src="{{ url_for('static', filename=current_user.foto_perfil_url) }}" alt="Ícone do Usuário" class="user-icon">
+        {% else %}
+            <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="user-icon">
+        {% endif %}
+    </div>
+    <div class="container_profile">
+        <!-- Formulário de Upload de Imagem -->
+        <form action="{{ url_for('usuario.upload_imagem_route') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="foto_perfil" accept="image/*" required>
+            <br>
+            <button onclick="return validarEnvio()">Enviar</button>
+        </form>
+    </div>
+    
+        <h1>{{ current_user.nome }}!</h1>
+        <p>Você pode personalizar o conteúdo e o estilo conforme necessário.</p>
+
+    <div class="button">
+        <a href="{{ url_for('usuario.organizador_route') }}">
+            <button type="button" class="organizador-button">Modo Organizador</button>
+        </a>
+    </div>
+
+    <div class="button">
+    <a>
+        <!-- Botão de Logout -->
+        <form action="{{ url_for('auth.logout_route') }}" method="post">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </a>
+    </div>
+        
+    <div class="button">
+        <a href="{{ url_for('usuario.atualizar_route') }}">
+            <button type="button" class="atulization-button">Atualizar Conta</button>
+        </a>
+    </div>
+
+
+    <!-- Botão de Deletar Conta -->
+    <form action="{{ url_for('usuario.deletar_usuario_route') }}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
+        <button type="submit" class="delete-button">Deletar Conta</button>
+    </form>
+    
+    {% else %}
+        <h1>Você não está logado, irmão.</h1>
+        <div class="button">
+            <!-- Botão de Login -->
+            <a href="{{ url_for('auth.login_route') }}">
+                <button type="button" class="login-button">Login</button>
+            </a>
+        </div>
+        <div class="button">
+            <!-- Botão de Registrar -->
+            <a href="{{ url_for('auth.registrar_route') }}">
+                <button type="button" class="register-button">Registrar</button>
+            </a>
+        </div>
+    {% endif %}
+</body>
+</html>

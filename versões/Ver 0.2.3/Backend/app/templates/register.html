@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+    <title>Minha Página</title>
+</head>
+<body>
+   <form action="" method="post">
+    <div class ="inputbox">
+        Nome: <input type="text" name="nomeForm" id=""><br>
+        Email: <input type="text" name="emailForm" id=""><br>
+        Senha: <input type="password" name="senhaForm" id="senha"><br>
+    </div>
+    
+    <div class = "button">
+        <input type="submit" value="Entrar"> 
+    </div>
+   </form>
+    <h1>Ja possui uma conta ? Faça login abaixo</h1>
+    <!-- Botão de Login -->
+    <form action="{{ url_for('auth.login_route') }}" method="get">
+        <button type="submit" class="login-button">Login</button>
+</form>
+</body>
+</html>

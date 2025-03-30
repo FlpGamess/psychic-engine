@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+    <title>Login</title>
+</head>
+
+<body>
+    <h1> Login </h1>
+    
+   <form action="" method="post">
+    Email: <input type="text" name="emailForm" id=""><br>
+    Senha: <input type="password" name="senhaForm" id="senha"><br>
+    <input type="checkbox" onclick="ExibeSenha()"> Mostar Senha <!-- An element to toggle between password visibility -->
+    <input type="submit" value="Adentre"> 
+    </form>
+
+<p>Não possui uma conta? Registre-se a baixo.</p>
+
+<!-- Botão de register -->
+    <form action="{{ url_for('auth.registrar_route') }}" method="get">
+    <button type="submit" class="register-button">Registrar</button>
+    </form>
+
+    </body>
+
+</html>
