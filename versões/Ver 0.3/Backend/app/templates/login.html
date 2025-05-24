@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block main %}
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+    <h1> Login </h1>
+    
+   <form action="" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="emailForm" placeholder="Email" id="" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="senhaForm" placeholder="Senha" type="password">
+        </div>
+
+        
+        <div class="mb-3 text-center">
+            <!-- An element to toggle between password visibility -->
+            <!--
+            <input type="checkbox" onclick="ExibeSenha()"> Mostar Senha 
+            -->
+            <div class="mensagem">
+                    {% if mensagem %}
+                        <p >{{ mensagem }}</p>
+                    {% endif %}
+            </div>
+
+            <button class="btn btn-primary" type="submit">Fazer Log In</button>
+        </div>
+        
+
+    </form>
+
+    <p>Não possui uma conta? Registre-se a baixo.</p>
+
+    <!-- Botão de register -->
+    <form action="{{ url_for('auth.registrar_route') }}" method="get">
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+    <br>
+    <!-- Botão para voltar à homepage -->
+    <a href="{{ url_for('home.homepage') }}">
+        <button type="button" class="btn btn-primary">Voltar</button>
+    </a>
+</div>
+{% endblock %}

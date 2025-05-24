@@ -1,0 +1,61 @@
+{% extends "layout2.html" %}
+{% block title %}Cria Evento{% endblock %}
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Criar Novo Evento</h1>
+
+    <form action="{{ url_for('evento.criar_route') }}" method="post" enctype="multipart/form-data">
+        <div class="row g-3">
+
+            <div class="col-md-12">
+                <label for="tituloForm" class="form-label">Título do Evento</label>
+                <input type="text" class="form-control" id="tituloForm" name="tituloForm" placeholder="Digite o título do evento" required>
+            </div>
+
+            <div class="col-md-6">
+                <label for="dataInscForm" class="form-label">Início das Inscrições</label>
+                <input type="date" class="form-control" id="dataInscForm" name="dataInscForm" required>
+            </div>
+
+            <div class="col-md-6">
+                <label for="dataPrazoForm" class="form-label">Prazo Final para Inscrição</label>
+                <input type="date" class="form-control" id="dataPrazoForm" name="dataPrazoForm" required>
+            </div>
+
+            <div class="col-md-6">
+                <label for="dataEventoForm" class="form-label">Data do Evento</label>
+                <input type="date" class="form-control" id="dataEventoForm" name="dataEventoForm" required>
+            </div>
+
+            <div class="col-md-6">
+                <label for="localizacaoForm" class="form-label">Localização</label>
+                <input type="text" class="form-control" id="localizacaoForm" name="localizacaoForm" placeholder="Digite o local do evento" required>
+            </div>
+
+            <div class="col-md-12">
+                <label for="descricaoForm" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricaoForm" name="descricaoForm" rows="4" placeholder="Descreva o evento" required></textarea>
+            </div>
+
+            <div class="col-md-12">
+                <label for="fotoEventoForm" class="form-label">Imagem do Evento (opcional)</label>
+                <input type="file" class="form-control" id="fotoEventoForm" name="fotoEventoForm" accept="image/*">
+            </div>
+
+            <div class="col-md-6 d-grid">
+                <button type="submit" class="btn btn-primary">Criar Evento</button>
+            </div>
+            <div class="col-md-6 d-grid">
+                <a href="{{ url_for('usuario.organizador_route') }}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

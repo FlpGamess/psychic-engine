@@ -1,0 +1,28 @@
+{% extends "layout2.html" %}
+{% block title %}Organizador{% endblock %}
+
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center d-flex flex-column gap-3">
+
+            <form action="{{ url_for('evento.criar_route') }}" method="get">
+                <button type="submit" class="btn btn-primary btn-lg w-100">Criar Novo Evento</button>
+            </form>
+
+            <form action="{{ url_for('evento.meus_eventos_route') }}" method="get">
+                <button type="submit" class="btn btn-primary btn-lg w-100">Visualizar Eventos</button>
+            </form>
+
+            <a href="{{ url_for('home.homepage') }}" class="btn btn-secondary btn-lg w-100">Voltar</a>
+
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

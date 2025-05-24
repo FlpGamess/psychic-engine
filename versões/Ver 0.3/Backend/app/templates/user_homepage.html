@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Bundle (com JS para collapse) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- Seus arquivos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <title>Home</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+        <h1 class="h5 m-0">[Nome de site de Eventos]</h1>
+        </a>
+
+        <!-- Formulário de busca centralizado -->
+        <form class="d-flex mx-auto" style="max-width: 500px; width: 100%;" role="search" method="GET" action="{{ url_for('home.homepage') }}">
+        <input class="form-control me-2" type="search" name="q" placeholder="Buscar eventos por nome..."
+            aria-label="Search" value="{{ request.args.get('q', '') }}">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+
+    <!-- Dropdown com a foto do usuário e links -->
+    <div class="dropdown me-3 ms-auto">
+    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{{ url_for('static', filename=current_user.foto_perfil_url or 'user-icon.jpeg') }}" alt="Usuário" class="rounded-circle" width="40" height="40">
+    </a>
+    <ul class="dropdown-menu dropdown-custom dropdown-menu-end">
+        <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ url_for('auth.logout_route') }}">Sair</a></li>
+    </ul>
+    </div>
+
+    </div>
+    </nav>
+
+</body>
+
+<main>
+<br>
+    <!-- Seção de eventos -->
+    <div class="container">
+        {% if termo %}
+            <h2 class="mb-4">Resultados para "{{ termo }}"</h2>
+        {% else %}
+            <h2 class="mb-4">Eventos em Destaque</h2>
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% if lista_eventos %}
+                {% for item in lista_eventos %}
+                <div class="col evento-card" id="evento-{{ item.id }}">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename=item.foto_evento_url) }}" class="card-img-top" alt="Imagem do Evento">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.titulo }}</h5>
+                            <p class="card-text"><strong>Data:</strong> {{ item.data_execucao.strftime('%d/%m/%Y') }}</p>
+                            <p class="card-text"><strong>Prazo de inscrição:</strong> {{ item.data_prazo.strftime('%d/%m/%Y') }}</p>
+                            <button class="btn btn-outline-primary mt-2" type="button" onclick="mostrarEvento('{{ item.id }}')">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                        <div class="collapse card-footer bg-light" id="detalhes-{{ item.id }}">
+                            <p><strong>Descrição:</strong> {{ item.descricao }}</p>
+                            <p><strong>Local:</strong> {{ item.localizacao }}</p>
+                            <form method="GET" action="{{ url_for('evento.visualizar_route', id=item.id) }}">
+                                <button type="submit" class="btn btn-secondary mt-2">Mais Informações</button>
+                            </form>
+                            <button type="button" class="btn btn-danger mt-2" onclick="voltarLista()">Voltar</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center">Nenhum evento encontrado para "{{ termo }}".</p>
+            {% endif %}
+        </div>
+    </div>
+    </main>
+</html>

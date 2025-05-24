@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Linking the CSS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script> <!-- Linking the JS file -->
+    <title>Atualizar Informações</title>
+
+</head>
+<body>
+    <div class="container">
+        <form action="{{ url_for('usuario.atualizar_route') }}" method="post">
+            <h1>Atualizar Informações</h1>
+            <!-- Formulário para atualizar nome -->
+                <label for="novo_nome">Novo Nome:</label>
+                <input type="text" id="novo_nome" name="nomeForm" placeholder="Digite o novo nome">
+                <input type="hidden" name="campo" value="nome">
+
+            <!-- Formulário para atualizar email -->
+                <label for="novo_email">Novo Email:</label>
+                <input type="text" id="novo_email" name="emailForm" placeholder="Digite o novo email">
+                <input type="hidden" name="campo" value="email">
+
+            <!-- Formulário para atualizar senha -->
+                <label for="nova_senha">Nova Senha:</label>
+                <input type="password" id="nova_senha" name="senhaForm" placeholder="Digite a nova senha">
+                <input type="hidden" name="campo" value="senha">
+
+            <div class="mensagem">
+                {% if mensagem %}
+                    <p >{{ mensagem }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Botão de confirmar alterações -->
+                <button type="submit">Atualizar</button>
+
+            <!-- Botão para voltar à homepage -->
+            <a href="{{ url_for('home.homepage') }}">
+                <button type="button">Voltar</button>
+            </a>
+        </form>
+    </div>
+</body>
+</html>
