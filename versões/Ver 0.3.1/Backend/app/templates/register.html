@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}Registre-se{% endblock %}
+
+{%block main %}
+<div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+   <form action="" method="post">
+    <h1>Registrar-se</h1>
+    <br>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="nomeForm" placeholder="Nome" id="" type="text">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="emailForm" placeholder="Email" id="" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="senhaForm" placeholder="Senha" type="password">
+        </div>
+
+
+        <div class="mb-3 text-center">
+            <!-- An element to toggle between password visibility -->
+            <!--
+            <input type="checkbox" onclick="ExibeSenha()"> Mostar Senha 
+            -->
+            <div class="mensagem">
+                    {% if mensagem %}
+                        <p >{{ mensagem }}</p>
+                    {% endif %}
+            </div>
+
+            <button class="btn btn-primary" type="submit">Registrar-se</button>
+        </div>
+
+    <!-- Mensagem de aviso para email já cadastrado -->
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="messageModalLabel">Aviso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                {{ messages[0] }}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <script>
+          // Espera a página carregar para mostrar o modal
+          window.addEventListener('load', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+            myModal.show();
+          });
+        </script>
+      {% endif %}
+    {% endwith %}
+
+
+   </form>
+    <p>Ja possui uma conta ? Faça login abaixo</p>
+    <!-- Botão de Login -->
+    <form action="{{ url_for('auth.login_route') }}" method="get">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <br>
+    <!-- Botão para voltar à homepage -->
+    <a href="{{ url_for('home.homepage') }}">
+        <button type="button" class="btn btn-primary">Voltar</button>
+    </a>
+</div>
+{% endblock %}

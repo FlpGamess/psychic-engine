@@ -1,0 +1,77 @@
+{% extends "layout.html" %}  
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+            <!-- Formulário de busca-->
+            <form class="d-flex mx-lg-auto my-2 my-lg-0" style="width: 100%; max-width: 500px;" role="search" method="GET" action="{{ url_for('home.homepage') }}">
+            <input class="form-control me-2" type="search" name="q" placeholder="Buscar eventos por nome..."
+                aria-label="Search" value="{{ request.args.get('q', '') }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+
+            <!-- Links à direita -->
+            <ul class="navbar-nav ms-lg-3 mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.login_route') }}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.registrar_route') }}">Registrar</a>
+            </li>
+            </ul>
+       
+{% endblock %}
+
+
+{% block main %}
+<br>
+    <!-- Seção de eventos -->
+    <div class="container">
+        {% if termo %}
+            <h2 class="mb-4">Resultados para "{{ termo }}"</h2>
+        {% else %}
+            <h2 class="mb-4">Eventos em Destaque</h2>
+        {% endif %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% if lista_eventos %}
+                {% for item in lista_eventos %}
+                <div class="col evento-card" id="evento-{{ item.id }}">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename=item.foto_evento_url) }}" class="card-img-top" alt="Imagem do Evento">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.titulo }}</h5>
+                            {% if item.tags %}
+                            <div class="mt-4">
+                                <h5 class="fw-bold">Tags:</h5>
+                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+                                    {% for tag in item.tags %}
+                                        <span class="badge bg-primary fs-6">#{{ tag.nome }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <p class="card-text"><strong>Data:</strong> {{ item.data_execucao.strftime('%d/%m/%Y') }}</p>
+                            <p class="card-text"><strong>Prazo de inscrição:</strong> {{ item.data_prazo.strftime('%d/%m/%Y') }}</p>
+                            <button class="btn btn-outline-primary mt-2" type="button" onclick="mostrarEvento('{{ item.id }}')">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                        <div class="collapse card-footer bg-light" id="detalhes-{{ item.id }}">
+                            <p><strong>Descrição:</strong> {{ item.descricao }}</p>
+                            <p><strong>Local:</strong> {{ item.localizacao }}</p>
+                            <form method="GET" action="{{ url_for('evento.visualizar_route', id=item.id) }}">
+                                <button type="submit" class="btn btn-secondary mt-2">Mais Informações</button>
+                            </form>
+                            <button type="button" class="btn btn-danger mt-2" onclick="voltarLista()">Voltar</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center">Nenhum evento encontrado para "{{ termo }}".</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

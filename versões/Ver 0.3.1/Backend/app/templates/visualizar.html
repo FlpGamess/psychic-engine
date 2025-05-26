@@ -1,0 +1,81 @@
+{% extends "layout2.html" %}
+{% block title %}Tabela de eventos{% endblock %}
+
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+{% block main %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4 fw-bold ">Tabela de Eventos</h1>
+
+    <div class="table-responsive shadow rounded-4 p-4 bg-white">
+        <table class="table align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Imagem</th>
+                    <th>Título</th>
+                    <th>Inscrição</th>
+                    <th>Prazo</th>
+                    <th>Execução</th>
+                    <th>Local</th>
+                    <th>Descrição</th>
+                    <th>Criador</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set eventos_lista = lista_eventos if lista_eventos is defined else eventos %}
+                {% for evento in eventos_lista %}
+                <tr>
+                    <td class="fw-semibold text-secondary">{{ evento.id }}</td>
+                    <td>
+                        <div class="position-relative">
+                            <img src="{{ url_for('static', filename=evento.foto_evento_url) }}" 
+                                alt="Imagem do Evento" 
+                                class="rounded-3" 
+                                style="width: 70px; height: 70px; object-fit: cover; transition: transform 0.3s ease;"
+                                onmouseover="this.style.transform='scale(1.1)'" 
+                                onmouseout="this.style.transform='scale(1)'">
+                        </div>
+                    </td>
+                    <td class="fw-bold">{{ evento.titulo }}</td> <!-- <=== Faltava isso aqui -->
+                    <td>
+                        <span class="badge bg-info text-dark">
+                            {{ evento.data_inscricao.strftime('%d/%m/%Y') }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-warning text-dark">
+                            {{ evento.data_prazo.strftime('%d/%m/%Y') }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-success">
+                            {{ evento.data_execucao.strftime('%d/%m/%Y') }}
+                        </span>
+                    </td>
+                    <td>{{ evento.localizacao }}</td>
+                    <td>{{ evento.descricao }}</td>
+                    <td>
+                        <a href="{{ url_for('evento.editar_route', id=evento.id) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">Editar</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('inscricoes.inscritos_evento_route', id=evento.id) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">Ver Inscritos</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('usuario.organizador_route') }}" class="btn btn-secondary btn-lg shadow">
+            Voltar
+        </a>
+    </div>
+</div>
+
+{% endblock %}

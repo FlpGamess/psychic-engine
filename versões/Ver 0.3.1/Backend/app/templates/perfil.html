@@ -1,0 +1,51 @@
+{% extends "layout2.html" %}
+{% block title %}Perfil{% endblock %}
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+{% block main %}
+    <!-- Conteúdo principal -->
+    <div class="container mt-5">
+
+        <h2 class="mb-4 text-center">Perfil de {{ current_user.nome }}</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+
+                <!-- Foto do usuário -->
+                <div class="mb-3">
+                    {% if current_user.foto_perfil_url %}
+                        <img src="{{ url_for('static', filename=current_user.foto_perfil_url) }}" alt="Ícone do Usuário" class="rounded-circle" width="150" height="150">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='user-icon.jpeg') }}" alt="Ícone do Usuário" class="rounded-circle" width="150" height="150">
+                    {% endif %}
+                </div>
+
+                <!-- Upload de imagem -->
+                <form action="{{ url_for('usuario.upload_imagem_route') }}" method="post" enctype="multipart/form-data" class="mb-3">
+                    <div class="input-group">
+                        <input type="file" name="foto_perfil" class="form-control" accept="image/*" required>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+
+                <!-- Botões de ação -->
+                <div class="d-flex flex-column align-items-center gap-2 mt-3">
+                    <a href="{{ url_for('usuario.atualizar_route') }}" class="btn btn-primary">Atualizar Conta</a>
+
+                    <form action="{{ url_for('usuario.deletar_usuario_route') }}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
+                        <button type="submit" class="btn btn-outline-danger">Deletar Conta</button>
+                    </form>
+
+                    <a href="{{ url_for('home.homepage') }}" class="btn btn-secondary">Voltar</a>
+                </div>
+
+                <!-- ID do usuário (opcional para debug) -->
+                <p class="mt-3 text-muted">ID do usuário: {{ current_user.id }}</p>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout2.html" %}
+{% block title %}Editar evento{% endblock %}
+{% block body %} 
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+
+{% block main %}
+
+    <h2>Lista de Inscritos</h2>
+
+    {% if inscritos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID do Usuário</th>
+                    <th>Nome</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for id, nome in inscritos %}
+                    <tr>
+                        <td>{{ id }}</td>
+                        <td>{{ nome }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhum inscrito encontrado para este evento.</p>
+    {% endif %}
+
+{% endblock %}

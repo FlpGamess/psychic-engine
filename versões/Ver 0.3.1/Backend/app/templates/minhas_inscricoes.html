@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minhas Inscrições</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="minhas-inscricoes-container">
+        <h1>Minhas Inscrições</h1>
+
+        {% if inscricoes %}
+            {% for inscricao, evento in inscricoes %}
+            <div class="inscricao-item">
+                <strong>{{ evento.titulo }}</strong>
+                <p>📍 Local: {{ evento.localizacao }}</p>
+                <p>📅 Data: {{ evento.data_execucao.strftime('%d/%m/%Y') }}</p>
+                <p>📝 Status: {{ inscricao.status }}</p>
+                <p> Criador: {{ evento.criador }}</p>
+                <p>⏱ Inscrito em: {{ inscricao.data_inscricao.strftime('%d/%m/%Y') }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Você ainda não está inscrito em nenhum evento.</p>
+        {% endif %}
+
+        <a class="voltar-btn" href="{{ url_for('home.homepage') }}">Voltar à Página Inicial</a>
+    </div>
+</body>
+</html>
