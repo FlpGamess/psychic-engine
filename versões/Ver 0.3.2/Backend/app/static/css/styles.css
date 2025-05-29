@@ -1,0 +1,299 @@
+.header{
+    text-align: center;
+    color: black;
+}
+
+.container_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    margin-top: 50px;
+}
+
+.user-icon {
+    position: absolute; /* Posiciona o ícone */
+    top: 10px;          /* Distância do topo */
+    right: 30px;        /* Distância da direita */
+    width: 50px;        /* Tamanho do ícone */
+    height: 50px;
+    margin-bottom: 10px; /* Espaço entre o ícone e os botões */
+    cursor: pointer;     /* Cursor de ponteiro */
+}
+
+.logout-button, .login-button, .register-button, .atulization-button, .delete-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 64, 64);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Reset básico */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+
+/*=======================================================================================================================================================================================
+/* Navbar no topo */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+}
+
+.nav-button:hover {
+    background-color: #777;
+}
+
+/* Centralizar o título */
+.titulo_principal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh; /* Deixa o título no meio vertical da tela */
+    text-align: center;
+}
+
+.titulo_principal h1 {
+    font-size: 16px;
+    margin: 0;
+    color: white;
+}
+
+.nav-button button {
+    position: absolute;
+    top: 30px;       /* Mais para baixo */
+    right: 160px;    /* Mais para a esquerda */
+    padding: 8px 16px;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    background-color: #5c8df6;
+    color: white;
+    cursor: pointer;
+}
+
+.button button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5c8df6;
+    color: white;
+    cursor: pointer;
+}
+
+/*======================================================================================================================================================================================= */
+/* CUSTOMIZAÇÃO DA TABELA DE EVENTOS */
+table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+/*======================================================================================================================================================================================= */
+/* CUSTOMIZAÇÃO DOS CARDS DE EVENTOS */
+
+.evento-card {
+    max-width: fit-content;
+    max-height: fit-content;
+    background-color: #f8f8f8;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card img{
+    max-width: 500px;
+    max-height: 240px;
+}
+
+.card:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.card .detalhes.mostrar {
+    max-height: 400px;
+    padding-top: 20px;
+}
+
+.oculto {
+    display: none;
+}
+
+.card-content {
+    padding: 10px 15px;
+    font-size: 14px;
+    max-width: fit-content;
+    max-height: fit-content;
+}
+
+/* personaliza a foto do evento nas homepages*/
+.evento_foto img {
+    width: 100%;        /* ou um valor fixo, como 200px */
+    height: 300px;      /* altura fixa, ajustável conforme seu layout */
+    object-fit: cover;  /* mantém o preenchimento sem distorcer */
+    border-radius: 6px; /* opcional: cantos arredondados */
+}
+
+/*=======================================================================================================================================================================================*/
+/* Customização de mensagens de aviso */
+
+.flash-messages {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.alert {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f44336; /* vermelho */
+    color: white;
+    border-radius: 5px;
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+.mensagem{
+    color: red;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/*=======================================================================================================================================================================================*/
+/* ESTILO PARA A PÁGINA DE INSCRIÇÕES DO USUÁRIO */
+
+.minhas-inscricoes-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.minhas-inscricoes-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.inscricao-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+.inscricao-item strong {
+    color: #333;
+}
+
+.inscricao-item p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Botão de voltar */
+.voltar-btn {
+    display: block;
+    margin: 30px auto 0;
+    padding: 10px 20px;
+    background-color: #5c8df6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.voltar-btn:hover {
+    background-color: #3e6ae1;
+}
+
+.navbar-custom {
+    background-color: purple;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .btn {
+    color: darkorange;
+}
+
+.btn-light{
+    background-color: lightgray;
+}
+
+.evento-detalhado {
+  width: 100%;
+  z-index: 2;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.btn-primary{
+    background-color: purple;
+    border-color: purple;
+    color: darkorange;
+}
+
+main{
+    background-color: #ffffff;
+}
+footer{
+    background-color: #ffffff;
+}
+
+.dropdown-custom{
+    background-color: purple; /* Fundo do menu */
+    color: darkorange;              /* Cor do texto */
+}
+
+.dropdown-custom .dropdown-item{
+    color: white;
+}
+.dropdown-custom .dropdown-item:hover {
+  background-color: #34495e; /* Fundo ao passar o mouse */
+  color: #fff;               /* Texto ao passar o mouse */
+}
+
+.botao-custom{
+    padding: 8px 10px;
+    font-size: 0.96rem;
+    width:150px;
+    background-color: purple;
+    color: darkorange;
+}
