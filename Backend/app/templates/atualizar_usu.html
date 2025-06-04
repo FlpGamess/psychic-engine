@@ -1,0 +1,46 @@
+{% extends "layout2.html" %}
+{% block title %}Atualizar usuario{% endblock %}
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li> 
+{% endblock %}
+{%block main%}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+        <h1 class="card-title text-center mb-4">Atualizar Informações</h1>
+        <form action="{{ url_for('usuario.atualizar_route') }}" method="post">
+
+            <div class="mb-3">
+                <label for="novo_nome" class="form-label">Novo Nome:</label>
+                <input type="text" id="novo_nome" name="nomeForm" placeholder="Digite o novo nome" class="form-control">
+                <input type="hidden" name="campo" value="nome">
+            </div>
+
+            <div class="mb-3">
+                <label for="novo_email" class="form-label">Novo Email:</label>
+                <input type="text" id="novo_email" name="emailForm" placeholder="Digite o novo email" class="form-control">
+                <input type="hidden" name="campo" value="email">
+            </div>
+
+            <div class="mb-3">
+                <label for="nova_senha" class="form-label">Nova Senha:</label>
+                <input type="password" id="nova_senha" name="senhaForm" placeholder="Digite a nova senha" class="form-control">
+                <input type="hidden" name="campo" value="senha">
+            </div>
+
+            {% if mensagem %}
+            <div class="alert alert-info text-center">
+                {{ mensagem }}
+            </div>
+            {% endif %}
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Atualizar</button>
+                <a href="{{ url_for('home.homepage') }}" class="btn btn-secondary">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

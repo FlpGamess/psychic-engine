@@ -1,0 +1,37 @@
+from app import db
+from app.models.evento_tags import evento_tags
+
+class Eventos(db.Model):
+    __tablename__ = 'eventos'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    titulo = db.Column(db.String(255), nullable=False)
+    tipo = db.Column(db.String(3), nullable=False)
+    data_inscricao = db.Column(db.String(255))
+    data_prazo = db.Column(db.String(255))
+    data_execucao = db.Column(db.String(255))
+    localizacao = db.Column(db.String(255)) 
+    descricao = db.Column(db.String(255))
+    criador = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    foto_evento_url = db.Column(db.String(255))
+    limite = db.Column(db.Integer, nullable=True)
+    link = db.Column(db.String(255))
+
+    tags = db.relationship(
+    'Tags',
+    secondary=evento_tags,
+    backref='eventos',
+    lazy='subquery'
+    )
+
+    def __init__(self, titulo, tipo, data_inscricao,data_prazo,data_execucao,localizacao,descricao,criador,foto_evento_url,limite, link):
+        self.titulo = titulo
+        self.tipo = tipo
+        self.data_inscricao = data_inscricao
+        self.data_execucao = data_execucao
+        self.data_prazo = data_prazo
+        self.localizacao = localizacao
+        self.descricao = descricao
+        self.criador = criador
+        self.foto_evento_url = foto_evento_url
+        self.limite = limite
+        self.link = link

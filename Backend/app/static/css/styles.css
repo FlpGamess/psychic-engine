@@ -1,0 +1,640 @@
+.header{
+    text-align: center;
+    color: black;
+}
+
+.container_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+    margin-top: 50px;
+}
+
+.user-icon {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.logout-button, .login-button, .register-button, .atulization-button, .delete-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 64, 64);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Reset básico */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar no topo */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+}
+
+.nav-button:hover {
+    background-color: #777;
+}
+
+/* Centralizar o título */
+.titulo_principal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    text-align: center;
+}
+
+.titulo_principal h1 {
+    font-size: 16px;
+    margin: 0;
+    color: white;
+}
+
+.nav-button button {
+    position: absolute;
+    top: 30px;
+    right: 160px;
+    padding: 8px 16px;
+    background-color: #5c8df6;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.button button {
+    margin-left: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #5c8df6;
+    color: white;
+    cursor: pointer;
+}
+
+/* Tabela de eventos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ddd;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Cards de eventos - Ajustados para tamanho fixo e clique no card todo */
+.evento-card {
+    width: 300px;         /* tamanho fixo largura */
+    height: 300px;        /* tamanho fixo altura para ser quadrado */
+    cursor: pointer;      /* indica que é clicável */
+    margin: 0 auto 30px;  /* centraliza e espaça os cards */
+}
+
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;           /* metade da altura do card */
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-body {
+    flex-grow: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+    text-align: center;
+}
+
+.card-body > div.mt-4 {
+    text-align: center;
+}
+
+/* Foto do evento nas homepages */
+.evento_foto img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Mensagens de aviso */
+.flash-messages {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.alert {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+.mensagem {
+    color: red;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* Página de inscrições do usuário */
+.minhas-inscricoes-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.minhas-inscricoes-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.inscricao-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+.inscricao-item strong {
+    color: #333;
+}
+
+.inscricao-item p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Botão voltar */
+.voltar-btn {
+    display: block;
+    margin: 30px auto 0;
+    padding: 10px 20px;
+    background-color: #5c8df6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.voltar-btn:hover {
+    background-color: #3e6ae1;
+}
+
+/* Navbar customizada */
+.navbar-custom {
+    background-color: purple;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .btn {
+    color: darkorange;
+}
+
+.btn-light {
+    background-color: lightgray;
+}
+
+.evento-detalhado {
+    width: 100%;
+    z-index: 2;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.btn-primary {
+    background-color: purple;
+    border-color: purple;
+    color: darkorange;
+}
+
+main {
+    background-color: #ffffff;
+}
+
+footer {
+    background-color: #ffffff;
+}
+
+.dropdown-custom {
+    background-color: purple;
+    color: darkorange;
+}
+
+.dropdown-custom .dropdown-item {
+    color: white;
+}
+
+.dropdown-custom .dropdown-item:hover {
+    background-color: #34495e;
+    color: #fff;
+}
+
+.botao-custom {
+    padding: 8px 10px;
+    font-size: 0.96rem;
+    width: 150px;
+    background-color: purple;
+    color: darkorange;
+}
+
+/*-------------------------------------------------------------------------------------------------------------------------*/
+/* Adicione uma margem à direita do "Ementos" 
+.navbar-brand {
+    margin-right: 250px; /* Ajuste este valor (ex: 50px, 100px, 150px) para empurrar o formulário para a direita */
+    /* Você pode precisar de um valor maior se o espaço for muito desequilibrado 
+}
+*/
+
+.navbar .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.navbar .container-fluid form.d-flex {
+    flex-grow: 1;
+    max-width: 600px;
+    width: 100%;
+    /* Mantenha as margens mx-auto no HTML para a centralização padrão do Bootstrap */
+}
+
+/* --- Ajuste a margem do .navbar-brand APENAS para telas grandes --- */
+@media (min-width: 1500px) { /* Aplica esta regra APENAS em telas maiores que 991.98px (breakpoint 'lg' do Bootstrap) */
+    .navbar-brand {
+        margin-right: 250px; /* Use o valor que funcionou para você em tela cheia */
+    }
+}
+
+/* --- Media query para responsividade em telas menores (abaixo de 992px) --- */
+@media (max-width: 991.98px) {
+    .navbar .container-fluid {
+        flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+        justify-content: center; /* Centraliza os itens quando eles quebram */
+    }
+
+    /* Em telas pequenas, garanta que a margem extra seja ZERO */
+    .navbar-brand {
+        margin-right: 0; /* Importantíssimo: remove a margem extra em telas pequenas */
+    }
+
+    .navbar .container-fluid form.d-flex {
+        order: 1; /* Faz o formulário aparecer primeiro em telas menores */
+        width: 100%; /* Ocupa a largura total da tela */
+        max-width: none; /* Remove o limite de largura para preencher a tela */
+        margin-left: 0; /* Remove margens auto para ocupar 100% */
+        margin-right: 0; /* Remove margens auto para ocupar 100% */
+    }
+    /* Opcional: Ajuste o dropdown em telas pequenas, se necessário */
+    .navbar .container-fluid .dropdown {
+        margin-left: auto; /* Garante que o dropdown vá para a direita se estiver na mesma linha */
+        margin-right: 0;
+    }
+}
+
+/* --- Estilos para os Cards de Eventos --- */
+
+/* Estilos para o título da seção "Eventos em Destaque" */
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2.5rem !important; /* Mantido para espaçamento do título principal */
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* Estilo geral para os cards de evento */
+.evento-card .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.evento-card .card:hover {
+    transform: scale(1.03);
+}
+
+.evento-card .card-img-top {
+    width: 100%;
+    height: 180px; /* Levemente reduzido do 180px para dar mais espaço ao texto, se necessário */
+    object-fit: cover;
+}
+
+.evento-card .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* REMOVIDO: justify-content: space-between; - Permite que o conteúdo se empilhe naturalmente */
+    justify-content: flex-start; /* Garante que o conteúdo comece do topo */
+    padding: 0.8rem 1rem; /* Ajuste do padding para economizar espaço */
+
+    /* **Ajuste CRÍTICO: min-height do card-body** */
+    /* Este é o valor que você precisará TESTAR e AJUSTAR manualmente no navegador.
+       Comece com este valor e AUMENTE-O (ex: 200px, 220px, 240px, 260px, etc.)
+       até que TODO o conteúdo (título, tags, ambas as datas) apareça sem cortes no card mais "cheio".
+       Use !important apenas para testes se não funcionar, mas tente evitá-lo seletivamente. */
+    min-height: 300px; /* Comece com um valor razoável e ajuste para cima */
+}
+
+/* Regra global para badges (removida ou movida para o seletor específico se for global) */
+/* .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.6em;
+    border-radius: 20px;
+} */
+
+/* As regras para h2 e .row globais que você tinha: */
+/* h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.row {
+    justify-content: center;
+} */
+/* Mantenha-os onde estavam ou remova se já estão definidos globalmente. */
+
+
+/* Estilo do título do evento */
+.evento-card .card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.15rem; /* Ajustei levemente para ter mais espaço */
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita o título a 2 linhas */
+    -webkit-box-orient: vertical;
+}
+
+/* Estilo para a seção de Tags (o div que envolve 'Tags:' e os badges) */
+.evento-card .card-body .mt-4 { /* Esta é a div que contém o título "Tags:" e os badges */
+    margin-top: 0.5rem !important; /* Reduzi ainda mais a margem superior */
+    margin-bottom: 0.4rem; /* Reduzi a margem inferior */
+    text-align: left; /* Tags se alinham à esquerda, economizando espaço */
+}
+
+.evento-card .card-body .fw-bold { /* O texto "Tags:" */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.8rem; /* Reduzi para ser menor que a data */
+    color: #555;
+    margin-bottom: 0.2rem; /* Margem inferior reduzida para ficar mais perto dos badges */
+    display: block;
+}
+
+/* Estilo para os Badges de Tags */
+.evento-card .card-body .badge {
+    background-color: purple  !important;
+    color: #fff;
+    padding: 0.2em 0.4em; /* Mantido pequeno */
+    border-radius: 20px;
+    font-size: 0.65em; /* Mantido pequeno para caber */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: normal;
+    line-height: 1.1;
+}
+
+/* Ajustes para o container das tags */
+.evento-card .card-body .d-flex.flex-wrap.gap-2 { /* Removido justify-content-center daqui no HTML */
+    gap: 0.3rem !important; /* Espaço entre os badges reduzido */
+    padding: 0; /* Removido padding, já que as tags se alinham à esquerda */
+}
+
+/* Estilo para as informações de data e prazo */
+.evento-card .card-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.8rem; /* Mantido pequeno */
+    color: #666;
+    margin-bottom: 0.2rem; /* Margem mínima entre as datas */
+    text-align: left; /* Alinhamento à esquerda para economizar espaço */
+}
+
+/* Garante que o último parágrafo não tenha margem extra */
+.evento-card .card-text:last-child {
+    margin-bottom: 0;
+}
+
+/* Estilo para o link que envolve o card */
+.evento-card > a {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Estilo para quando não há eventos */
+.text-center {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    color: #777;
+    margin-top: 3rem;
+}
+
+/* Placeholder de imagem e ícone */
+.card-img-top[alt="Imagem do Evento"][src*="default_event.png"],
+.card-img-top[src*="EVENT_IMAGE"] {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #bbb;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+}
+
+.card-img-top[alt="Imagem do Evento"][src*="default_event.png"]::before,
+.card-img-top[src*="EVENT_IMAGE"]::before {
+    content: "\f03e";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 3em;
+    color: #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+/* --- Estilos para os Cards do Carrossel de Favoritos (AJUSTADOS) --- */
+#carouselFavoritos .card {
+    width: 16rem; 
+    height: 350px; /* ALTURA FIXA TOTAL PARA O CARD - AJUSTE CONFORME NECESSÁRIO */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+    border-radius: 0.85rem; /* AUMENTADO para cantos mais arredondados, como na imagem */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra um pouco mais pronunciada, como na imagem */
+    background-color: white; /* Garante fundo branco */
+}
+
+#carouselFavoritos .card a.text-decoration-none {
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    color: inherit; 
+}
+
+#carouselFavoritos .card .card-img-top {
+    width: 100%;
+    height: 180px; /* ALTURA FIXA PARA A IMAGEM - AJUSTE SE NECESSÁRIO */
+    object-fit: cover; 
+    flex-shrink: 0; 
+    /* Se quiser um placeholder como na imagem quando não há foto: */
+    /* background-color: #f0f0f0; /* Cor de fundo para placeholder */
+}
+
+#carouselFavoritos .card .card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
+    padding: 1rem; 
+}
+
+#carouselFavoritos .card .card-title {
+    font-size: 1.1rem; /* Ajuste o tamanho da fonte do título se necessário */
+    font-weight: bold; /* Título em negrito, como na imagem "EVENT IMAGE" */
+    margin-bottom: 0.75rem; /* Aumenta um pouco o espaço abaixo do título */
+    color: #333; /* Cor escura para o título */
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Máximo de 2 linhas para o título */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: calc(1.3em * 2 * 1.1); /* Ajuste para 2 linhas */
+}
+
+/* Contêiner que sempre existe para as tags ou para ocupar o espaço delas */
+#carouselFavoritos .card .tags-placeholder {
+    margin-top: auto; 
+    padding-top: 0.5rem; 
+    min-height: 60px; /* ALTURA MÍNIMA PARA A ÁREA DAS TAGS - AJUSTE ESTE VALOR! */
+                      /* Deve ser suficiente para o título "Tags:" e uma linha de badges. */
+}
+
+#carouselFavoritos .card .actual-tags-content h5.fw-bold { /* Estilo para o título "Tags:" */
+    font-size: 0.9rem; 
+    margin-bottom: 0.35rem; /* Espaço entre "Tags:" e os badges */
+    color: #555; /* Cor para "Tags:" */
+    font-weight: normal; /* Fonte normal para "Tags:", como na imagem */
+}
+
+/* Estilo das TAGS para o carrossel, conforme a imagem de referência */
+#carouselFavoritos .card .actual-tags-content .badge {
+    font-size: 0.75rem;          /* Tamanho da fonte da tag */
+    color: white;                /* Texto branco */
+    background-color: purple;    /* Fundo roxo (ajuste esta cor ex: #8A2BE2 ou a cor exata que você usa) */
+    padding: 0.4em 0.9em;        /* Padding para dar mais espaço interno e forma arredondada */
+    border-radius: 50px;         /* Cantos BEM arredondados para efeito de pílula/cápsula */
+    margin-right: 0.3rem;        /* Pequeno espaço à direita de cada tag */
+    margin-bottom: 0.3rem;       /* Espaço abaixo de cada tag se quebrar linha */
+    border: none;                /* Remove qualquer borda padrão */
+    font-weight: 500;            /* Peso da fonte para as tags */
+}
+
+
+/* --- Estilo Unificado para Todas as Tags --- */
+.tag-estilizada {
+    font-size: 0.75rem;                /* Tamanho da fonte da tag */
+    color: white !important;           /* Texto branco (usamos !important para garantir) */
+    background-color: purple !important; /* Fundo roxo (ajuste a cor 'purple' para o tom exato que deseja, ex: #6f42c1, #8A2BE2, ou o 'purple' da sua navbar. !important para garantir) */
+    padding: 0.4em 0.9em;              /* Espaçamento interno para dar forma */
+    border-radius: 50px;               /* Cantos BEM arredondados para efeito de pílula */
+    margin-right: 0.4rem;              /* Espaço à direita de cada tag */
+    margin-bottom: 0.4rem;             /* Espaço abaixo de cada tag (útil se quebrar linha) */
+    border: none;                      /* Remove qualquer borda padrão */
+    font-weight: 500;                  /* Peso da fonte */
+    text-transform: none;              /* Remove qualquer transformação de texto como 'uppercase' */
+    letter-spacing: normal;            /* Reseta o espaçamento entre letras */
+    line-height: 1.3;                  /* Altura da linha para melhor leitura */
+    display: inline-block;             /* Comportamento padrão para badges */
+    text-align: center;                /* Centraliza o texto dentro da tag */
+    vertical-align: middle;            /* Alinha verticalmente com o texto ao redor */
+}

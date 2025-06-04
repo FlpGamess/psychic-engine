@@ -1,0 +1,105 @@
+{% extends "layout2.html" %}
+
+{% block title %}Cria Evento{% endblock %}
+
+{% block body %}
+    <li><a class="dropdown-item" href="{{ url_for('usuario.perfil_route') }}">Perfil</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('usuario.organizador_route') }}">Modo Organizador</a></li>
+    <li><a class="dropdown-item" href="{{ url_for('inscricoes.minhas_inscricoes') }}">Minhas Inscrições</a></li>
+{% endblock %} 
+
+{% block main %}
+<div class="container mt-4 mb-5"> 
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            
+            <div class="form-card shadow-lg p-4 p-md-5">
+                <h1 class="text-center mb-4 page-title-custom">Criar Novo Evento</h1>
+
+                <form action="{{ url_for('evento.criar_route') }}" method="post" enctype="multipart/form-data">
+                    <div class="row g-4"> 
+
+                        <div class="col-12">
+                            <label for="tituloForm" class="form-label">Título do Evento</label>
+                            <input type="text" class="form-control form-control-lg" id="tituloForm" name="tituloForm" placeholder="Ex: Workshop de Design Thinking" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="tipoForm" class="form-label">Tipo de Evento</label>
+                            <select class="form-select form-select-lg" id="tipoForm" name="tipoForm" required onclick="toggleLocalizacaoEvento()">
+                                <option value="" selected disabled>Selecione...</option>
+                                <option value="Online">Online</option>
+                                <option value="Presencial">Presencial</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6" id="localizacaoContainer" style="display: none;">
+                            <label for="localizacaoForm" class="form-label">Localização (Presencial)</label>
+                            <input type="text" class="form-control form-control-lg" id="localizacaoForm" name="localizacaoForm" placeholder="Endereço do evento">
+                        </div>
+
+                        <div class="col-md-6" id="linkContainer" style="display: none;">
+                            <label for="linkForm" class="form-label">Link do Evento (Online)</label>
+                            <input type="text" class="form-control form-control-lg" id="linkForm" name="linkForm" placeholder="Link para o evento online">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dataInscForm" class="form-label">Início das Inscrições</label>
+                            <input type="date" class="form-control form-control-lg" id="dataInscForm" name="dataInscForm" required> 
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dataPrazoForm" class="form-label">Prazo Final das Inscrições</label>
+                            <input type="date" class="form-control form-control-lg" id="dataPrazoForm" name="dataPrazoForm" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dataEventoForm" class="form-label">Data do Evento</label>
+                            <input type="date" class="form-control form-control-lg" id="dataEventoForm" name="dataEventoForm" required> 
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="limiteForm" class="form-label">Limite de Inscrições</label>
+                            <input type="number" class="form-control form-control-lg" id="limiteForm" name="limiteForm" placeholder="Vazio para ilimitado" min="0">
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="descricaoForm" class="form-label">Descrição Detalhada</label>
+                            <textarea class="form-control form-control-lg" id="descricaoForm" name="descricaoForm" rows="5" placeholder="Forneça todos os detalhes sobre o evento..." required></textarea> 
+                        </div>
+
+                        <div class="col-md-7">
+                            <label for="tagsForm" class="form-label">Tags do Evento</label> 
+                            <input type="text" class="form-control form-control-lg" id="tagsForm" name="tagsForm" placeholder="Ex: #design #workshop (separadas por espaço)"> 
+                            <div class="form-text">Use hashtags (#) e separe por espaço ou vírgula.</div>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <label for="fotoEventoForm" class="form-label">Imagem de Capa</label>
+                            <input type="file" class="form-control form-control-lg" id="fotoEventoForm" name="fotoEventoForm" accept="image/*" onchange="mostrarImagem(event)"> 
+                        </div>
+
+                        <div class="col-12 text-center" id="previewContainerOriginal" style="display: block;"> 
+                            <img id="preview" src="#" alt="Preview da Imagem" class="img-fluid rounded shadow-sm mt-3" style="display: none; max-height: 300px; border: 1px solid #ddd; padding: 5px;">
+                        </div>
+
+
+                        <div class="col-12 mt-4">
+                            <hr>
+                        </div>
+
+                        <div class="col-md-6 d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Criar Evento</button>
+                        </div>
+                        <div class="col-md-6 d-grid">
+                            <a href="{{ url_for('usuario.organizador_route') }}" class="btn btn-secondary btn-lg">Voltar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
